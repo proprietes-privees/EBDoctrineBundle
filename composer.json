@@ -1,0 +1,28 @@
+{
+    "name": "emmanuelballery/eb-doctrinebundle",
+    "description": "EBDoctrineBundle",
+    "homepage": "https://github.com/emmanuelballery/EBDoctrineBundle.git",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/emmanuelballery/EBDoctrineBundle.git"
+        }
+    ],
+    "authors": [
+        {
+            "name": "Emmanuel BALLERY",
+            "email": "emmanuel.ballery@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/framework-bundle": "2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "EB\\DoctrineBundle": ""
+        }
+    },
+    "target-dir": "EB/DoctrineBundle"
+}
