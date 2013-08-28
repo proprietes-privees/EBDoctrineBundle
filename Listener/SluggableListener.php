@@ -4,7 +4,7 @@ namespace EB\DoctrineBundle\Listener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use EB\DoctrineBundle\Entity\SluggableInterface;
-use EB\StringBundle\String;
+use EB\StringBundle\Stringer;
 
 /**
  * Class SluggableListener
@@ -14,14 +14,14 @@ use EB\StringBundle\String;
 class SluggableListener
 {
     /**
-     * @var String
+     * @var Stringer
      */
     private $string;
 
     /**
-     * @param String $string
+     * @param Stringer $string
      */
-    public function __construct(String $string)
+    public function __construct(Stringer $string)
     {
         $this->string = $string;
     }
