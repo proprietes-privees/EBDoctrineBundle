@@ -17,8 +17,11 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "*",
+        "symfony/symfony": "*",
         "emmanuelballery/eb-stringbundle": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
     },
     "autoload": {
         "psr-0": {
