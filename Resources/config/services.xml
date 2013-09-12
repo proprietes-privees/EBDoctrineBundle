@@ -3,18 +3,22 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="eb_doctrine.listener.timestampablelistener.class">EB\DoctrineBundle\Listener\TimestampableListener</parameter>
-        <parameter key="eb_doctrine.listener.sluggablelistener.class">EB\DoctrineBundle\Listener\SluggableListener</parameter>
+        <parameter key="eb_doctrine.event_listener.timestampable_listener.class">EB\DoctrineBundle\EventListener\TimestampableListener</parameter>
+        <parameter key="eb_doctrine.event_listener.sluggable_listener.class">EB\DoctrineBundle\EventListener\SluggableListener</parameter>
+        <parameter key="eb_doctrine.event_listener.traceable_subscriber.class">EB\DoctrineBundle\EventListener\TraceableSubscriber</parameter>
     </parameters>
     <services>
-        <service id="eb_doctrine.listener.timestampablelistener" class="%eb_doctrine.listener.timestampablelistener.class%">
+        <service id="eb_doctrine.event_listener.timestampable_listener" class="%eb_doctrine.event_listener.timestampable_listener.class%">
             <tag name="doctrine.event_listener" event="prePersist"/>
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
-        <service id="eb_doctrine.listener.sluggablelistener" class="%eb_doctrine.listener.sluggablelistener.class%">
+        <service id="eb_doctrine.event_listener.sluggable_listener" class="%eb_doctrine.event_listener.sluggable_listener.class%">
             <argument id="eb_string" type="service"/>
             <tag name="doctrine.event_listener" event="prePersist"/>
             <tag name="doctrine.event_listener" event="preUpdate"/>
+        </service>
+        <service id="eb_doctrine.event_listener.traceable_subscriber" class="%eb_doctrine.event_listener.traceable_subscriber.class%">
+            <tag name="doctrine.event_subscriber"/>
         </service>
     </services>
 </container>
