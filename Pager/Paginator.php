@@ -3,8 +3,10 @@
 namespace EB\DoctrineBundle\Pager;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Form\Extension\Templating\TemplatingRendererEngine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Class Paginator
@@ -17,6 +19,11 @@ class Paginator
      * @var EntityManager
      */
     private $em;
+
+    /**
+     * @var EngineInterface
+     */
+    private $engine;
 
     /**
      * @var Request
@@ -39,14 +46,16 @@ class Paginator
     private $orderName;
 
     /**
-     * @param EntityManager $em        Entity manager
-     * @param string        $pageName  Page argument name
-     * @param string        $limitName Limit argument name
-     * @param string        $orderName Order argument name
+     * @param EntityManager   $em        Entity manager
+     * @param EngineInterface $engine    Templating engine
+     * @param string          $pageName  Page argument name
+     * @param string          $limitName Limit argument name
+     * @param string          $orderName Order argument name
      */
-    public function __construct(EntityManager $em, $pageName, $limitName, $orderName)
+    public function __construct(EntityManager $em, EngineInterface $engine, $pageName, $limitName, $orderName)
     {
         $this->em = $em;
+        $this->engine = $engine;
         $this->pageName = $pageName;
         $this->limitName = $limitName;
         $this->orderName = $orderName;
@@ -86,10 +95,12 @@ class Paginator
 
         return new Pager(
             $rep->findBy($criteria, (array)$this->getRequestValue($this->orderName, array()), $limit, $offset),
-            (int)$count[0][1],
-            $limit,
-            $offset,
-            $page
+            $this->engine->render('EBDoctrineBundle:Pager:pager.html.twig', array(
+                'count' => $count,
+                'limit' => $limit,
+                'offset' => $offset,
+                'page' => $page,
+            ))
         );
     }
 

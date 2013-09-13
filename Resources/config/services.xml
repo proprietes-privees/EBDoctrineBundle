@@ -23,6 +23,7 @@
         <!--</service>-->
         <service id="eb_doctrine.pager.paginator" class="%eb_doctrine.pager.paginator.class%">
             <argument id="doctrine.orm.entity_manager" type="service"/>
+            <argument id="templating" type="service"/>
             <argument>%eb_doctrine.pager.pager.page_name%</argument>
             <argument>%eb_doctrine.pager.pager.limit_name%</argument>
             <argument>%eb_doctrine.pager.pager.order_name%</argument>

@@ -7,7 +7,7 @@ namespace EB\DoctrineBundle\Pager;
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class Pager
+class Pager implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     /**
      * @var array|object[]
@@ -15,146 +15,73 @@ class Pager
     private $entities;
 
     /**
-     * @var int
+     * @var string
      */
-    private $count;
-
-    /**
-     * @var int
-     */
-    private $limit;
-
-    /**
-     * @var int
-     */
-    private $offset;
-
-    /**
-     * @var int
-     */
-    private $page;
+    private $template;
 
     /**
      * @param array|object[] $entities Entity list
-     * @param int            $count    Entity count
-     * @param int            $limit    Limit
-     * @param int            $offset   Offset
-     * @param int            $page     Page
+     * @param string         $template Template
      */
-    public function __construct(array $entities, $count, $limit = 10, $offset = 0, $page = 1)
+    public function __construct(array $entities, $template)
     {
         $this->entities = $entities;
-        $this->count = $count;
-        $this->limit = $limit;
-        $this->offset = $offset;
-        $this->page = $page;
-    }
-
-    public function setEntities($entities)
-    {
-        $this->entities = $entities;
-
-        return $this;
-    }
-
-    public function getEntities()
-    {
-        return $this->entities;
+        $this->template = $template;
     }
 
     /**
-     * Set count
-     *
-     * @param int $count
-     *
-     * @return Pager
+     * @return string
      */
-    public function setCount($count)
+    public function __toString()
     {
-        $this->count = $count;
-
-        return $this;
+        return $this->template;
     }
 
     /**
-     * Get count
-     *
-     * @return int
+     * {@inheritdoc}
      */
-    public function getCount()
+    public function getIterator()
     {
-        return $this->count;
+        return new \ArrayIterator($this->entities);
     }
 
     /**
-     * Set limit
-     *
-     * @param int $limit
-     *
-     * @return Pager
+     * {@inheritdoc}
      */
-    public function setLimit($limit)
+    public function offsetExists($offset)
     {
-        $this->limit = $limit;
-
-        return $this;
+        return array_key_exists($offset, $this->entities);
     }
 
     /**
-     * Get limit
-     *
-     * @return int
+     * {@inheritdoc}
      */
-    public function getLimit()
+    public function offsetGet($offset)
     {
-        return $this->limit;
+        return $this->entities[$offset];
     }
 
     /**
-     * Set offset
-     *
-     * @param int $offset
-     *
-     * @return Pager
+     * {@inheritdoc}
      */
-    public function setOffset($offset)
+    public function offsetSet($offset, $value)
     {
-        $this->offset = $offset;
-
-        return $this;
+        $this->entities[$offset] = $value;
     }
 
     /**
-     * Get offset
-     *
-     * @return int
+     * {@inheritdoc}
      */
-    public function getOffset()
+    public function offsetUnset($offset)
     {
-        return $this->offset;
+        unset($this->entities[$offset]);
     }
 
     /**
-     * Set page
-     *
-     * @param int $page
-     *
-     * @return Pager
+     * {@inheritdoc}
      */
-    public function setPage($page)
+    public function count()
     {
-        $this->page = $page;
-
-        return $this;
-    }
-
-    /**
-     * Get page
-     *
-     * @return int
-     */
-    public function getPage()
-    {
-        return $this->page;
+        return count($this->entities);
     }
 }
