@@ -2,10 +2,6 @@
 
 namespace EB\DoctrineBundle\Pager;
 
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-
 /**
  * Class Pager
  *
@@ -14,97 +10,151 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class Pager
 {
     /**
-     * @var EntityManager
+     * @var array|object[]
      */
-    private $em;
+    private $entities;
 
     /**
-     * @var Request
+     * @var int
      */
-    private $request;
+    private $count;
 
     /**
-     * @var string
+     * @var int
      */
-    private $pageName;
+    private $limit;
 
     /**
-     * @var string
+     * @var int
      */
-    private $limitName;
+    private $offset;
 
     /**
-     * @var string
+     * @var int
      */
-    private $orderName;
+    private $page;
 
     /**
-     * @param EntityManager $em        Entity manager
-     * @param string        $pageName  Page argument name
-     * @param string        $limitName Limit argument name
-     * @param string        $orderName Order argument name
+     * @param array|object[] $entities Entity list
+     * @param int            $count    Entity count
+     * @param int            $limit    Limit
+     * @param int            $offset   Offset
+     * @param int            $page     Page
      */
-    public function __construct(EntityManager $em, $pageName, $limitName, $orderName)
+    public function __construct(array $entities, $count, $limit = 10, $offset = 0, $page = 1)
     {
-        $this->em = $em;
-        $this->pageName = $pageName;
-        $this->limitName = $limitName;
-        $this->orderName = $orderName;
+        $this->entities = $entities;
+        $this->count = $count;
+        $this->limit = $limit;
+        $this->offset = $offset;
+        $this->page = $page;
+    }
+
+    public function setEntities($entities)
+    {
+        $this->entities = $entities;
+
+        return $this;
+    }
+
+    public function getEntities()
+    {
+        return $this->entities;
     }
 
     /**
-     * @param GetResponseEvent $event
+     * Set count
+     *
+     * @param int $count
+     *
+     * @return Pager
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function setCount($count)
     {
-        $this->request = $event->getRequest();
+        $this->count = $count;
+
+        return $this;
     }
 
     /**
-     * Create a pager
+     * Get count
      *
-     * @param string $class    Entity class
-     * @param array  $criteria Entity filter criteria
-     *
-     * @return array
+     * @return int
      */
-    public function createPager($class, array $criteria = array())
+    public function getCount()
     {
-        // Count entities
-        $rep = $this->em->getRepository($class);
-        $qb = $rep->createQueryBuilder('a');
-        $countResult = $qb
-            ->select($qb->expr()->countDistinct('a.id'))
-            ->getQuery()
-            ->getArrayResult();
-        $count = (int)$countResult[0][1];
-
-        // Prepare limit and offset
-        $page = max(1, (int)$this->getRequestValue($this->pageName, 1));
-        $limit = (int)$this->getRequestValue($this->limitName, 10);
-        $offset = max(0, $limit * ($page - 1));
-
-        return array(
-            'page' => $page,
-            'limit' => $limit,
-            'offset' => $offset,
-            'count' => (int)$count[0][1],
-            'entities' => $rep->findBy($criteria, (array)$this->getRequestValue($this->orderName, array()), $limit, $offset),
-        );
+        return $this->count;
     }
 
     /**
-     * @param string $name    Argument name
-     * @param mixed  $default Default argument value
+     * Set limit
      *
-     * @return mixed
+     * @param int $limit
+     *
+     * @return Pager
      */
-    private function getRequestValue($name, $default)
+    public function setLimit($limit)
     {
-        if (null === $this->request) {
-            return $default;
-        }
+        $this->limit = $limit;
 
-        return $this->request->get($name, $default);
+        return $this;
+    }
+
+    /**
+     * Get limit
+     *
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * Set offset
+     *
+     * @param int $offset
+     *
+     * @return Pager
+     */
+    public function setOffset($offset)
+    {
+        $this->offset = $offset;
+
+        return $this;
+    }
+
+    /**
+     * Get offset
+     *
+     * @return int
+     */
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
+    /**
+     * Set page
+     *
+     * @param int $page
+     *
+     * @return Pager
+     */
+    public function setPage($page)
+    {
+        $this->page = $page;
+
+        return $this;
+    }
+
+    /**
+     * Get page
+     *
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->page;
     }
 }
