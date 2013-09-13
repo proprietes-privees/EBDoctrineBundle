@@ -6,6 +6,7 @@
         <parameter key="eb_doctrine.event_listener.timestampable_listener.class">EB\DoctrineBundle\EventListener\TimestampableListener</parameter>
         <parameter key="eb_doctrine.event_listener.sluggable_listener.class">EB\DoctrineBundle\EventListener\SluggableListener</parameter>
         <!--<parameter key="eb_doctrine.event_listener.traceable_subscriber.class">EB\DoctrineBundle\EventListener\TraceableSubscriber</parameter>-->
+        <parameter key="eb_doctrine.pager.pager.class">EB\DoctrineBundle\Pager\Pager</parameter>
     </parameters>
     <services>
         <service id="eb_doctrine.event_listener.timestampable_listener" class="%eb_doctrine.event_listener.timestampable_listener.class%">
@@ -18,7 +19,14 @@
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
         <!--<service id="eb_doctrine.event_listener.traceable_subscriber" class="%eb_doctrine.event_listener.traceable_subscriber.class%">-->
-            <!--<tag name="doctrine.event_subscriber"/>-->
+        <!--<tag name="doctrine.event_subscriber"/>-->
         <!--</service>-->
+        <service id="eb_doctrine.pager.pager" class="%eb_doctrine.pager.pager.class%">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
+            <argument>%eb_doctrine.pager.pager.page_name%</argument>
+            <argument>%eb_doctrine.pager.pager.limit_name%</argument>
+            <argument>%eb_doctrine.pager.pager.order_name%</argument>
+            <tag name="kernel.event_listener" event="kernel.request"/>
+        </service>
     </services>
 </container>
