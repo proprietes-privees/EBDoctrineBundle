@@ -3,22 +3,33 @@
     {% if max > 1 %}
         {% set route = app.request.attributes.get('_route') %}
         {% set routeParams = app.request.attributes.get('_route_params') %}
-        <div class="pagination pagination-centered pagination-mini">
-            <ul>
-                {% if page > 1 %}
-                    <li><a href="{{ path(route,routeParams|merge({page:page-1})) }}" title="{{ 'admin.previous'|trans }}"><i class="icon-arrow-left"></i></a></li>
-                {% endif %}
-                {% for i in 1..max %}
-                    {% if i == page %}
-                        <li class="active"><a href="{{ path(route,routeParams|merge({page:i})) }}" title="{{ 'admin.page'|trans }} {{ i }}">{{ i }}</a></li>
-                    {% else %}
-                        <li><a href="{{ path(route,routeParams|merge({page:i})) }}" title="{{ 'admin.page'|trans }} {{ i }}">{{ i }}</a></li>
+        {% set border_limit = 3 %}
+        {% set border_left = false %}
+        {% set border_right = false %}
+        <ul class="pagination pagination-sm">
+            {% if page > 1 %}
+                <li><a href="{{ path(route,routeParams|merge({page:page-1})) }}" title="{{ 'admin.previous'|trans }}">&lsaquo;</a></li>
+            {% endif %}
+            {% for i in 1..max %}
+                {% if i == page %}
+                    <li class="active"><a href="{{ path(route,routeParams|merge({page:i})) }}" title="{{ 'admin.page'|trans }} {{ i }}">{{ i }}</a></li>
+                {% elseif i > border_limit and i < page - border_limit %}
+                    {% if not border_left %}
+                        <li><span>...</span></li>
+                        {% set border_left = true %}
                     {% endif %}
-                {% endfor %}
-                {% if page < max %}
-                    <li><a href="{{ path(route,routeParams|merge({page:page+1})) }}" title="{{ 'admin.next'|trans }}"><i class="icon-arrow-right"></i></a></li>
+                {% elseif i > page + border_limit and i < max - border_limit + 1 %}
+                    {% if not border_right %}
+                        <li><span>...</span></li>
+                        {% set border_right = true %}
+                    {% endif %}
+                {% else %}
+                    <li><a href="{{ path(route,routeParams|merge({page:i})) }}" title="{{ 'admin.page'|trans }} {{ i }}">{{ i }}</a></li>
                 {% endif %}
-            </ul>
-        </div>
+            {% endfor %}
+            {% if page < max %}
+                <li><a href="{{ path(route,routeParams|merge({page:page+1})) }}" title="{{ 'admin.next'|trans }}">&rsaquo;</a></li>
+            {% endif %}
+        </ul>
     {% endif %}
 {% endif %}

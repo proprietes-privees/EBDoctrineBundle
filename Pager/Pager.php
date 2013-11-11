@@ -2,15 +2,17 @@
 
 namespace EB\DoctrineBundle\Pager;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 /**
  * Class Pager
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class Pager implements \Countable, \IteratorAggregate, \ArrayAccess
+class Pager implements \Countable, \IteratorAggregate
 {
     /**
-     * @var array|object[]
+     * @var Paginator
      */
     private $entities;
 
@@ -20,10 +22,10 @@ class Pager implements \Countable, \IteratorAggregate, \ArrayAccess
     private $template;
 
     /**
-     * @param array|object[] $entities Entity list
-     * @param string         $template Template
+     * @param Paginator $entities Entity list
+     * @param string    $template Template
      */
-    public function __construct(array $entities, $template)
+    public function __construct(Paginator $entities, $template)
     {
         $this->entities = $entities;
         $this->template = $template;
@@ -42,39 +44,7 @@ class Pager implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->entities);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetExists($offset)
-    {
-        return array_key_exists($offset, $this->entities);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetGet($offset)
-    {
-        return $this->entities[$offset];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetSet($offset, $value)
-    {
-        $this->entities[$offset] = $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->entities[$offset]);
+        return $this->entities->getIterator();
     }
 
     /**
@@ -82,6 +52,6 @@ class Pager implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function count()
     {
-        return count($this->entities);
+        return $this->entities->count();
     }
 }

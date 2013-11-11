@@ -2,11 +2,12 @@
 
 namespace EB\DoctrineBundle\Pager;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Form\Extension\Templating\TemplatingRendererEngine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Templating\EngineInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 
 /**
  * Class Paginator
@@ -82,19 +83,32 @@ class Paginator
         // Count entities
         $rep = $this->em->getRepository($class);
         $qb = $rep->createQueryBuilder('a');
-        $countResult = $qb
+        $count = (int)$qb
             ->select($qb->expr()->countDistinct('a.id'))
             ->getQuery()
-            ->getArrayResult();
-        $count = (int)$countResult[0][1];
+            ->getResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
 
         // Prepare limit and offset
         $page = max(1, (int)$this->getRequestValue($this->pageName, 1));
         $limit = (int)$this->getRequestValue($this->limitName, 10);
         $offset = max(0, $limit * ($page - 1));
 
+        // Doctrine paginator
+        $qb = $rep->createQueryBuilder('a');
+        foreach ($criteria as $key => $value) {
+            $qb
+                ->andWhere($qb->expr()->eq('a.' . $key, ':' . $key))
+                ->setParameter($key, $value);
+        }
+        foreach ((array)$this->getRequestValue($this->orderName, array()) as $key => $value) {
+            $qb
+                ->addOrderBy('a.' . $key, $value);
+        }
+        $qb->setFirstResult($offset);
+        $qb->setMaxResults($limit);
+
         return new Pager(
-            $rep->findBy($criteria, (array)$this->getRequestValue($this->orderName, array()), $limit, $offset),
+            new DoctrinePaginator($qb),
             $this->engine->render('EBDoctrineBundle:Pager:pager.html.twig', array(
                 'count' => $count,
                 'limit' => $limit,
