@@ -2,16 +2,16 @@
 
 namespace EB\DoctrineBundle\EventListener;
 
+use EB\DoctrineBundle\Entity\UriableInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use EB\DoctrineBundle\Entity\SluggableInterface;
 use EB\StringBundle\Twig\Extension\StringExtension;
 
 /**
- * Class SluggableListener
+ * Class UriableListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class SluggableListener
+class UriableListener
 {
     /**
      * @var StringExtension
@@ -32,8 +32,8 @@ class SluggableListener
     public function prePersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        if ($entity instanceof SluggableInterface) {
-            $entity->setSlug($this->string->search(implode(' ', $entity->getSluggableData())));
+        if ($entity instanceof UriableInterface) {
+            $entity->setUri($this->string->uri($entity->getStringToUri()));
         }
     }
 
@@ -43,8 +43,8 @@ class SluggableListener
     public function preUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        if ($entity instanceof SluggableInterface) {
-            $entity->setSlug($this->string->search(implode(' ', $entity->getSluggableData())));
+        if ($entity instanceof UriableInterface) {
+            $entity->setUri($this->string->uri($entity->getStringToUri()));
             $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));
             $args->getEntityManager()->getUnitOfWork()->recomputeSingleEntityChangeSet($mdt, $entity);
         }
