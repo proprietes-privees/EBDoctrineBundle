@@ -5,7 +5,6 @@
     <parameters>
         <parameter key="eb_doctrine.event_listener.timestampable_listener.class">EB\DoctrineBundle\EventListener\TimestampableListener</parameter>
         <parameter key="eb_doctrine.event_listener.sluggable_listener.class">EB\DoctrineBundle\EventListener\SluggableListener</parameter>
-        <!--<parameter key="eb_doctrine.event_listener.traceable_subscriber.class">EB\DoctrineBundle\EventListener\TraceableSubscriber</parameter>-->
         <parameter key="eb_doctrine.pager.paginator.class">EB\DoctrineBundle\Pager\Paginator</parameter>
     </parameters>
     <services>
@@ -18,9 +17,6 @@
             <tag name="doctrine.event_listener" event="prePersist"/>
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
-        <!--<service id="eb_doctrine.event_listener.traceable_subscriber" class="%eb_doctrine.event_listener.traceable_subscriber.class%">-->
-        <!--<tag name="doctrine.event_subscriber"/>-->
-        <!--</service>-->
         <service id="eb_doctrine.pager.paginator" class="%eb_doctrine.pager.paginator.class%">
             <argument id="doctrine.orm.entity_manager" type="service"/>
             <argument id="templating" type="service"/>
