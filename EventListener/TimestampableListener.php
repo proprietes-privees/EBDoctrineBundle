@@ -19,7 +19,9 @@ class TimestampableListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof TimestampableInterface) {
-            $entity->setCreated(new \DateTime());
+            if (null === $entity->getCreated()) {
+                $entity->setCreated(new \DateTime());
+            }
         }
     }
 

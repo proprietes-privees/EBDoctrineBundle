@@ -10,6 +10,13 @@ namespace EB\DoctrineBundle\Entity;
 interface TimestampableInterface
 {
     /**
+     * Get creation date
+     *
+     * @return \DateTime
+     */
+    public function getCreated();
+
+    /**
      * Set creation date
      *
      * @param \DateTime $date
