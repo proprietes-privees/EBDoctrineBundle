@@ -45,8 +45,9 @@ class SluggableListener
         $entity = $args->getEntity();
         if ($entity instanceof SluggableInterface) {
             $entity->setSlug($this->string->search(implode(' ', $entity->getSluggableData())));
+
             $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));
-            $args->getEntityManager()->getUnitOfWork()->recomputeSingleEntityChangeSet($mdt, $entity);
+            $args->getEntityManager()->getUnitOfWork()->computeChangeSet($mdt, $entity);
         }
     }
 }
