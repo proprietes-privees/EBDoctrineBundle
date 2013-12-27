@@ -10,14 +10,14 @@ namespace EB\DoctrineBundle\Entity;
 interface UriableInterface
 {
     /**
-     * Return a string to convert in URI
+     * Return a string to uri
      *
      * @return string
      */
     public function getStringToUri();
 
     /**
-     * Set a new URI
+     * Set uri
      *
      * @param string $uri
      *

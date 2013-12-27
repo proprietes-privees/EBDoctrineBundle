@@ -3,20 +3,22 @@
 namespace EB\DoctrineBundle\Entity;
 
 /**
- * Class SluggableInterface
+ * Interface SluggableInterface
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
 interface SluggableInterface
 {
     /**
-     * Return an array of interesting strings or integers
+     * Return a string to slug
      *
-     * @return string[]
+     * @return string
      */
-    public function getSluggableData();
+    public function getStringToSlug();
 
     /**
+     * Set slug
+     *
      * @param string $slug
      *
      * @return SluggableInterface

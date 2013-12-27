@@ -3,15 +3,16 @@
 namespace EB\DoctrineBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use EB\DoctrineBundle\Entity\SluggableInterface;
 use EB\StringBundle\Twig\Extension\StringExtension;
 
 /**
- * Class SluggableListener
+ * Class DoctrineSluggableEventListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class SluggableListener
+class DoctrineSluggableEventListener
 {
     /**
      * @var StringExtension
@@ -38,16 +39,17 @@ class SluggableListener
     }
 
     /**
-     * @param LifecycleEventArgs $args
+     * @param PreUpdateEventArgs $args
      */
-    public function preUpdate(LifecycleEventArgs $args)
+    public function preUpdate(PreUpdateEventArgs $args)
     {
         $entity = $args->getEntity();
         if ($entity instanceof SluggableInterface) {
             $entity->setSlug($this->string->search(implode(' ', $entity->getSluggableData())));
 
+            // Save new value
             $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));
-            $args->getEntityManager()->getUnitOfWork()->computeChangeSet($mdt, $entity);
+            $args->getEntityManager()->getUnitOfWork()->recomputeSingleEntityChangeSet($mdt, $entity);
         }
     }
 }
