@@ -34,7 +34,7 @@ class DoctrineSluggableEventListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof SluggableInterface) {
-            $entity->setSlug($this->string->search(implode(' ', $entity->getSluggableData())));
+            $entity->setSlug($this->string->search($entity->getStringToSlug()));
         }
     }
 
@@ -45,7 +45,7 @@ class DoctrineSluggableEventListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof SluggableInterface) {
-            $entity->setSlug($this->string->search(implode(' ', $entity->getSluggableData())));
+            $entity->setSlug($this->string->search($entity->getStringToSlug()));
 
             // Save new value
             $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));
