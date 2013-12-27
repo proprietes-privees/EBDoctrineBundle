@@ -5,7 +5,7 @@ namespace EB\DoctrineBundle\EventListener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use EB\DoctrineBundle\Entity\SluggableInterface;
-use EB\StringBundle\Twig\Extension\StringExtension;
+use EB\StringBundle\String\StringService;
 
 /**
  * Class DoctrineSluggableEventListener
@@ -15,14 +15,14 @@ use EB\StringBundle\Twig\Extension\StringExtension;
 class DoctrineSluggableEventListener
 {
     /**
-     * @var StringExtension
+     * @var StringService
      */
     private $string;
 
     /**
-     * @param StringExtension $string
+     * @param StringService $string
      */
-    public function __construct(StringExtension $string)
+    public function __construct(StringService $string)
     {
         $this->string = $string;
     }
