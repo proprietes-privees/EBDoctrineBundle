@@ -3,13 +3,13 @@ EBDoctrineBundle
 
 Set of doctrine listeners.
 
-EBFileBundle
-============
+EBFileBundle (merged)
+=====================
 
 ## Configuration
 
 ```yaml
-eb_file:
+eb_doctrine:
   useEnvDiscriminator: false
   depth: 0
   path:
@@ -21,21 +21,23 @@ eb_file:
 
   - Create an entity
   - Implement one of these interface or superclass:
-    - EB\FileBundle\Entity\FileInterface (secured, no web access)
-    - EB\FileBundle\Entity\FileReadableInterface (add web access)
+    - EB\DoctrineBundle\Entity\FileInterface (secured, no web access)
+    - EB\DoctrineBundle\Entity\FileReadableInterface (add web access)
   - Add an \SplFileInfo to your entity using "setFile" method
-  - EB\FileBundle\Entity\FileListener will automatically save this file
+  - EB\DoctrineBundle\Entity\FileListener will automatically :
     - Save file in the file system
     - Save its name, extension and size
     - Add a path/uri to this entity
     - Delete file when entity is deleted
 
-EBUserBundle
-============
+EBUserBundle (merged)
+=====================
 
 This bundle automates :
   - The generation of a salt
   - The generation of a user password
+  - The persistence of last and current user login dates
+  - The persistence of last password update date
 
 # Salt
   - Your Salted entity has to inherit SaltedInterface
@@ -43,7 +45,6 @@ This bundle automates :
 
 # User
   - Your User entity has to inherit UserInterface.
-  - Your advanced User entity has to inherit AdvancedUserInterface.
   - When a new password is entered, the plain value has to be set in the rawPassword field.
   - When the entity is persisted or updated, and the rawPassword field is not empty, the listener will encode the password before the database persistence.
 
