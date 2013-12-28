@@ -1,24 +1,41 @@
 <?xml version="1.0" ?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="eb_doctrine.event_listener.created_listener.class">EB\DoctrineBundle\EventListener\DoctrineCreatedListener</parameter>
-        <parameter key="eb_doctrine.event_listener.updated_listener.class">EB\DoctrineBundle\EventListener\DoctrineUpdatedListener</parameter>
-        <parameter key="eb_doctrine.event_listener.slug_listener.class">EB\DoctrineBundle\EventListener\DoctrineSlugListener</parameter>
-        <parameter key="eb_doctrine.event_listener.uri_listener.class">EB\DoctrineBundle\EventListener\DoctrineUriListener</parameter>
+        <parameter key="eb_doctrine.event_listener.doctrine_created_listener.class">EB\DoctrineBundle\EventListener\DoctrineCreatedListener</parameter>
+        <parameter key="eb_doctrine.event_listener.doctrine_file_listener.class">EB\DoctrineBundle\EventListener\DoctrineFileListener</parameter>
+        <parameter key="eb_doctrine.event_listener.doctrine_updated_listener.class">EB\DoctrineBundle\EventListener\DoctrineUpdatedListener</parameter>
+        <parameter key="eb_doctrine.event_listener.doctrine_slug_listener.class">EB\DoctrineBundle\EventListener\DoctrineSlugListener</parameter>
+        <parameter key="eb_doctrine.event_listener.doctrine_uri_listener.class">EB\DoctrineBundle\EventListener\DoctrineUriListener</parameter>
     </parameters>
     <services>
-        <service id="eb_doctrine.event_listener.created_listener" class="%eb_doctrine.event_listener.created_listener.class%">
+        <service id="eb_doctrine.event_listener.doctrine_created_listener" class="%eb_doctrine.event_listener.doctrine_created_listener.class%">
             <tag name="doctrine.event_listener" event="prePersist"/>
         </service>
-        <service id="eb_doctrine.event_listener.updated_listener" class="%eb_doctrine.event_listener.updated_listener.class%">
+        <service id="eb_doctrine.event_listener.doctrine_file_listener" class="%eb_doctrine.event_listener.doctrine_file_listener.class%">
+            <argument id="filesystem" type="service"/>
+            <argument>%kernel.root_dir%</argument>
+            <argument>%eb_file.path.web%</argument>
+            <argument>%eb_file.path.secured%</argument>
+            <argument>%eb_file.useEnvDiscriminator%</argument>
+            <argument>%eb_file.useClassDiscriminator%</argument>
+            <argument>%eb_file.depth%</argument>
+            <argument>%kernel.environment%</argument>
+            <argument id="logger" type="service"/>
+            <tag name="doctrine.event_listener" event="prePersist" priority="200"/>
+            <tag name="doctrine.event_listener" event="preUpdate" priority="200"/>
+            <tag name="doctrine.event_listener" event="postPersist" priority="200"/>
+            <tag name="doctrine.event_listener" event="postUpdate" priority="200"/>
+            <tag name="doctrine.event_listener" event="preRemove" priority="200"/>
+        </service>
+        <service id="eb_doctrine.event_listener.doctrine_updated_listener" class="%eb_doctrine.event_listener.doctrine_updated_listener.class%">
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
-        <service id="eb_doctrine.event_listener.slug_listener" class="%eb_doctrine.event_listener.slug_listener.class%">
+        <service id="eb_doctrine.event_listener.doctrine_slug_listener" class="%eb_doctrine.event_listener.doctrine_slug_listener.class%">
             <argument id="eb_string" type="service"/>
             <tag name="doctrine.event_listener" event="prePersist"/>
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
-        <service id="eb_doctrine.event_listener.uri_listener" class="%eb_doctrine.event_listener.uri_listener.class%">
+        <service id="eb_doctrine.event_listener.doctrine_uri_listener" class="%eb_doctrine.event_listener.doctrine_uri_listener.class%">
             <argument id="eb_string" type="service"/>
             <tag name="doctrine.event_listener" event="prePersist"/>
             <tag name="doctrine.event_listener" event="preUpdate"/>
