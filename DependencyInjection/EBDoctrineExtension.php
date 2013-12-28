@@ -21,11 +21,11 @@ class EBDoctrineExtension extends Extension
     {
         // Load configuration
         $conf = $this->processConfiguration(new Configuration(), $configs);
-        $container->setParameter('eb_file.path.web', $conf['path']['web']);
-        $container->setParameter('eb_file.path.secured', $conf['path']['secured']);
-        $container->setParameter('eb_file.useEnvDiscriminator', $conf['useEnvDiscriminator']);
-        $container->setParameter('eb_file.useClassDiscriminator', $conf['useClassDiscriminator']);
-        $container->setParameter('eb_file.depth', $conf['depth']);
+        $container->setParameter('eb_doctrine.path.web', $conf['path']['web']);
+        $container->setParameter('eb_doctrine.path.secured', $conf['path']['secured']);
+        $container->setParameter('eb_doctrine.useEnvDiscriminator', $conf['useEnvDiscriminator']);
+        $container->setParameter('eb_doctrine.useClassDiscriminator', $conf['useClassDiscriminator']);
+        $container->setParameter('eb_doctrine.depth', $conf['depth']);
 
         // Load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
