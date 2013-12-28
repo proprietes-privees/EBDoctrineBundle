@@ -1,9 +1,9 @@
 <?php
 
-namespace EB\UserBundle\EventListener;
+namespace EB\DoctrineBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use EB\UserBundle\Entity\SaltInterface;
+use EB\DoctrineBundle\Entity\SaltInterface;
 
 /**
  * Class DoctrineSaltListener

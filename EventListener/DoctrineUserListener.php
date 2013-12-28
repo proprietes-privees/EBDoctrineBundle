@@ -1,11 +1,11 @@
 <?php
 
-namespace EB\UserBundle\EventListener;
+namespace EB\DoctrineBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use EB\UserBundle\Entity\UserInterface;
-use EB\UserBundle\Entity\UserPasswordDateInterface;
+use EB\DoctrineBundle\Entity\UserInterface;
+use EB\DoctrineBundle\Entity\UserPasswordDateInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**

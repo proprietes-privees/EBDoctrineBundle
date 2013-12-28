@@ -1,9 +1,9 @@
 <?php
 
-namespace EB\UserBundle\EventListener;
+namespace EB\DoctrineBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
-use EB\UserBundle\Entity\UserLoginInterface;
+use EB\DoctrineBundle\Entity\UserLoginInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
