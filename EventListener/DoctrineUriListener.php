@@ -2,17 +2,17 @@
 
 namespace EB\DoctrineBundle\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use EB\DoctrineBundle\Entity\SluggableInterface;
+use EB\DoctrineBundle\Entity\UriInterface;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use EB\StringBundle\String\StringService;
 
 /**
- * Class DoctrineSluggableEventListener
+ * Class DoctrineUriListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class DoctrineSluggableEventListener
+class DoctrineUriListener
 {
     /**
      * @var StringService
@@ -33,8 +33,8 @@ class DoctrineSluggableEventListener
     public function prePersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        if ($entity instanceof SluggableInterface) {
-            $entity->setSlug($this->string->search($entity->getStringToSlug()));
+        if ($entity instanceof UriInterface) {
+            $entity->setUri($this->string->uri($entity->getStringToUri()));
         }
     }
 
@@ -44,8 +44,8 @@ class DoctrineSluggableEventListener
     public function preUpdate(PreUpdateEventArgs $args)
     {
         $entity = $args->getEntity();
-        if ($entity instanceof SluggableInterface) {
-            $entity->setSlug($this->string->search($entity->getStringToSlug()));
+        if ($entity instanceof UriInterface) {
+            $entity->setUri($this->string->uri($entity->getStringToUri()));
 
             // Save new value
             $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));

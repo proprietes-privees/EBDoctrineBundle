@@ -2,37 +2,23 @@
 
 namespace EB\DoctrineBundle\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use EB\DoctrineBundle\Entity\TimestampableInterface;
+use EB\DoctrineBundle\Entity\UpdatedInterface;
 
 /**
- * Class DoctrineTimestampableEventListener
+ * Class DoctrineUpdatedListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class DoctrineTimestampableEventListener
+class DoctrineUpdatedListener
 {
-    /**
-     * @param LifecycleEventArgs $args
-     */
-    public function prePersist(LifecycleEventArgs $args)
-    {
-        $entity = $args->getEntity();
-        if ($entity instanceof TimestampableInterface) {
-            if (null === $entity->getCreated()) {
-                $entity->setCreated(new \DateTime());
-            }
-        }
-    }
-
     /**
      * @param PreUpdateEventArgs $args
      */
     public function preUpdate(PreUpdateEventArgs $args)
     {
         $entity = $args->getEntity();
-        if ($entity instanceof TimestampableInterface) {
+        if ($entity instanceof UpdatedInterface) {
             $entity->setUpdated(new \DateTime());
 
             // Save new value

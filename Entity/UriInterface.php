@@ -3,11 +3,11 @@
 namespace EB\DoctrineBundle\Entity;
 
 /**
- * Interface UriableInterface
+ * Interface UriInterface
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-interface UriableInterface
+interface UriInterface
 {
     /**
      * Return a string to uri
@@ -21,7 +21,7 @@ interface UriableInterface
      *
      * @param string $uri
      *
-     * @return UriableInterface
+     * @return UriInterface
      */
     public function setUri($uri);
 }

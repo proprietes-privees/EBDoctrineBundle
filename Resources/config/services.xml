@@ -1,21 +1,24 @@
 <?xml version="1.0" ?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="eb_doctrine.event_listener.timestampable_listener.class">EB\DoctrineBundle\EventListener\DoctrineTimestampableEventListener</parameter>
-        <parameter key="eb_doctrine.event_listener.sluggable_listener.class">EB\DoctrineBundle\EventListener\DoctrineSluggableEventListener</parameter>
-        <parameter key="eb_doctrine.event_listener.uriable_listener.class">EB\DoctrineBundle\EventListener\DoctrineUriableEventListener</parameter>
+        <parameter key="eb_doctrine.event_listener.created_listener.class">EB\DoctrineBundle\EventListener\DoctrineCreatedListener</parameter>
+        <parameter key="eb_doctrine.event_listener.updated_listener.class">EB\DoctrineBundle\EventListener\DoctrineUpdatedListener</parameter>
+        <parameter key="eb_doctrine.event_listener.slug_listener.class">EB\DoctrineBundle\EventListener\DoctrineSlugListener</parameter>
+        <parameter key="eb_doctrine.event_listener.uri_listener.class">EB\DoctrineBundle\EventListener\DoctrineUriListener</parameter>
     </parameters>
     <services>
-        <service id="eb_doctrine.event_listener.timestampable_listener" class="%eb_doctrine.event_listener.timestampable_listener.class%">
+        <service id="eb_doctrine.event_listener.created_listener" class="%eb_doctrine.event_listener.created_listener.class%">
             <tag name="doctrine.event_listener" event="prePersist"/>
+        </service>
+        <service id="eb_doctrine.event_listener.updated_listener" class="%eb_doctrine.event_listener.updated_listener.class%">
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
-        <service id="eb_doctrine.event_listener.sluggable_listener" class="%eb_doctrine.event_listener.sluggable_listener.class%">
+        <service id="eb_doctrine.event_listener.slug_listener" class="%eb_doctrine.event_listener.slug_listener.class%">
             <argument id="eb_string" type="service"/>
             <tag name="doctrine.event_listener" event="prePersist"/>
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
-        <service id="eb_doctrine.event_listener.uriable_listener" class="%eb_doctrine.event_listener.uriable_listener.class%">
+        <service id="eb_doctrine.event_listener.uri_listener" class="%eb_doctrine.event_listener.uri_listener.class%">
             <argument id="eb_string" type="service"/>
             <tag name="doctrine.event_listener" event="prePersist"/>
             <tag name="doctrine.event_listener" event="preUpdate"/>

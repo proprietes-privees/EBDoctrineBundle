@@ -3,11 +3,11 @@
 namespace EB\DoctrineBundle\Entity;
 
 /**
- * Interface SluggableInterface
+ * Interface SlugInterface
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-interface SluggableInterface
+interface SlugInterface
 {
     /**
      * Return a string to slug
@@ -21,7 +21,7 @@ interface SluggableInterface
      *
      * @param string $slug
      *
-     * @return SluggableInterface
+     * @return SlugInterface
      */
     public function setSlug($slug);
 }

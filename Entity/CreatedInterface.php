@@ -3,11 +3,11 @@
 namespace EB\DoctrineBundle\Entity;
 
 /**
- * Interface TimestampableInterface
+ * Interface CreatedInterface
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-interface TimestampableInterface
+interface CreatedInterface
 {
     /**
      * Get created
@@ -21,16 +21,7 @@ interface TimestampableInterface
      *
      * @param \DateTime $date
      *
-     * @return TimestampableInterface
+     * @return CreatedInterface
      */
     public function setCreated(\DateTime $date);
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $date
-     *
-     * @return TimestampableInterface
-     */
-    public function setUpdated(\DateTime $date);
 }
