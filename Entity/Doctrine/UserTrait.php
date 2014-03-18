@@ -4,13 +4,11 @@ namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * Trait UserTrait
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
- * @DoctrineAssert\UniqueEntity(fields={"username"})
  */
 trait UserTrait
 {

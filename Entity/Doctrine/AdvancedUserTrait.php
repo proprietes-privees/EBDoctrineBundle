@@ -78,9 +78,23 @@ trait AdvancedUserTrait
     }
 
     /**
+     * Set Enabled
+     *
+     * @param bool $enabled Enabled
+     *
+     * @return AdvancedUserTrait
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
      * Get Enabled
      *
-     * @return mixed
+     * @return bool
      */
     public function getEnabled()
     {
