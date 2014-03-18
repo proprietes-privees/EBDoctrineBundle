@@ -3,6 +3,7 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 
 /**
  * Trait AdvancedUserTrait
@@ -15,32 +16,37 @@ trait AdvancedUserTrait
      * @var bool
      * @ORM\Column(type="boolean")
      */
-    private $enabled = true;
+    private $enabled;
 
     /**
-     * @var bool
-     * @ORM\Column(type="boolean")
+     * @var null|\DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\DateTime()
      */
-    private $accountExpired = false;
+    private $accountExpired;
 
     /**
-     * @var bool
-     * @ORM\Column(type="boolean")
+     * @var null|\DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\DateTime()
      */
-    private $accountLocked = false;
+    private $accountLocked;
 
     /**
-     * @var bool
-     * @ORM\Column(type="boolean")
+     * @var null|\DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\DateTime()
      */
-    private $credentialsExpired = false;
+    private $credentialsExpired;
 
     /**
      * @return bool
      */
     public function isAccountNonExpired()
     {
-        return false === $this->getAccountExpired();
+        return
+            null === $this->getAccountExpired() ||
+            $this->getAccountExpired()->getTimestamp() > time();
     }
 
     /**
@@ -48,7 +54,9 @@ trait AdvancedUserTrait
      */
     public function isAccountNonLocked()
     {
-        return false === $this->getAccountLocked();
+        return
+            null === $this->getAccountLocked() ||
+            $this->getAccountLocked()->getTimestamp() > time();
     }
 
     /**
@@ -56,7 +64,9 @@ trait AdvancedUserTrait
      */
     public function isCredentialsNonExpired()
     {
-        return false === $this->getCredentialsExpired();
+        return
+            null === $this->getCredentialsExpired() ||
+            $this->getCredentialsExpired()->getTimestamp() > time();
     }
 
     /**
@@ -68,23 +78,9 @@ trait AdvancedUserTrait
     }
 
     /**
-     * Set enabled
+     * Get Enabled
      *
-     * @param bool $enabled
-     *
-     * @return AdvancedUserTrait
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = $enabled;
-
-        return $this;
-    }
-
-    /**
-     * Get enabled
-     *
-     * @return bool
+     * @return mixed
      */
     public function getEnabled()
     {
@@ -94,11 +90,11 @@ trait AdvancedUserTrait
     /**
      * Set AccountExpired
      *
-     * @param bool $accountExpired
+     * @param null|\DateTime $accountExpired AccountExpired
      *
      * @return AdvancedUserTrait
      */
-    public function setAccountExpired($accountExpired)
+    public function setAccountExpired(\DateTime $accountExpired = null)
     {
         $this->accountExpired = $accountExpired;
 
@@ -108,7 +104,7 @@ trait AdvancedUserTrait
     /**
      * Get AccountExpired
      *
-     * @return bool
+     * @return null|\DateTime
      */
     public function getAccountExpired()
     {
@@ -118,11 +114,11 @@ trait AdvancedUserTrait
     /**
      * Set AccountLocked
      *
-     * @param bool $accountLocked
+     * @param null|\DateTime $accountLocked AccountLocked
      *
      * @return AdvancedUserTrait
      */
-    public function setAccountLocked($accountLocked)
+    public function setAccountLocked(\DateTime $accountLocked = null)
     {
         $this->accountLocked = $accountLocked;
 
@@ -132,7 +128,7 @@ trait AdvancedUserTrait
     /**
      * Get AccountLocked
      *
-     * @return bool
+     * @return null|\DateTime
      */
     public function getAccountLocked()
     {
@@ -142,11 +138,11 @@ trait AdvancedUserTrait
     /**
      * Set CredentialsExpired
      *
-     * @param bool $credentialsExpired
+     * @param null|\DateTime $credentialsExpired CredentialsExpired
      *
      * @return AdvancedUserTrait
      */
-    public function setCredentialsExpired($credentialsExpired)
+    public function setCredentialsExpired(\DateTime $credentialsExpired = null)
     {
         $this->credentialsExpired = $credentialsExpired;
 
@@ -156,7 +152,7 @@ trait AdvancedUserTrait
     /**
      * Get CredentialsExpired
      *
-     * @return bool
+     * @return null|\DateTime
      */
     public function getCredentialsExpired()
     {
