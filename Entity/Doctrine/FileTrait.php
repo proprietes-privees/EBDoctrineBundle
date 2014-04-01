@@ -174,7 +174,7 @@ trait FileTrait
      *
      * @return FileTrait
      */
-    public function setFile($file)
+    public function setFile(\SplFileInfo $file = null)
     {
         $this->file = $file;
 
