@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
         $ch->integerNode('depth')->defaultValue(0)->info('File tree depth')->example('5');
         $pa = $ch->arrayNode('path')->addDefaultsIfNotSet()->children();
         $pa->scalarNode('web')->defaultValue('/files')->info('Web file path.')->example('/files');
-        $pa->scalarNode('secured')->defaultValue('%kernel.root_dir%/cache/files')->info('Secured file path.')->example('/var/my-data');
+        $pa->scalarNode('secured')->defaultValue('%kernel.root_dir%/cache/%kernel.environment%/files')->info('Secured file path.')->example('/var/my-data');
 
         return $tb;
     }
