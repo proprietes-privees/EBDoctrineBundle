@@ -13,18 +13,18 @@ trait FileReadableTrait
 {
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $uri;
 
     /**
      * Set Uri
      *
-     * @param string $uri
+     * @param null|string $uri
      *
      * @return FileReadableTrait
      */
-    public function setUri($uri)
+    public function setUri($uri = null)
     {
         $this->uri = $uri;
 
@@ -34,7 +34,7 @@ trait FileReadableTrait
     /**
      * Get Uri
      *
-     * @return string
+     * @return null|string
      */
     public function getUri()
     {
