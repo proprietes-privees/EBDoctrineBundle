@@ -7,6 +7,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use EB\DoctrineBundle\Entity\FileInterface;
 use EB\DoctrineBundle\Entity\FileReadableInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -103,25 +104,6 @@ class DoctrineFileListener
     }
 
     /**
-     * Before creation and update, we must
-     * complete the entity details
-     *
-     * @param PreUpdateEventArgs $args
-     */
-    public function preUpdate(PreUpdateEventArgs $args)
-    {
-        $entity = $args->getEntity();
-        if ($entity instanceof FileInterface) {
-            if (null !== $file = $entity->getFile()) {
-                $this->load($entity, $file);
-
-                $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));
-                $args->getEntityManager()->getUnitOfWork()->computeChangeSet($mdt, $entity);
-            }
-        }
-    }
-
-    /**
      * Load file
      *
      * @param FileInterface $entity
@@ -147,17 +129,28 @@ class DoctrineFileListener
     }
 
     /**
-     * @param LifecycleEventArgs $args
+     * Before creation and update, we must
+     * complete the entity details
+     *
+     * @param PreUpdateEventArgs $args
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function preUpdate(PreUpdateEventArgs $args)
     {
-        $this->postLoadFile($args);
+        $entity = $args->getEntity();
+        if ($entity instanceof FileInterface) {
+            if (null !== $file = $entity->getFile()) {
+                $this->load($entity, $file);
+
+                $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));
+                $args->getEntityManager()->getUnitOfWork()->computeChangeSet($mdt, $entity);
+            }
+        }
     }
 
     /**
      * @param LifecycleEventArgs $args
      */
-    public function postUpdate(LifecycleEventArgs $args)
+    public function postPersist(LifecycleEventArgs $args)
     {
         $this->postLoadFile($args);
     }
@@ -202,37 +195,49 @@ class DoctrineFileListener
                         $entity->getExtension()
                     );
                     $this->logger->debug(__METHOD__ . ' : path = ' . $path);
-                    $this->fs->mkdir(pathinfo($path, PATHINFO_DIRNAME));
-                    $this->fs->rename($file->getRealPath(), $path, true);
-
-                    // Update file
-                    $entity->setFile(new \SplFileInfo($path));
-                    $entity->setComputedPath(realpath($path));
-
-                    // If this file is readable, save its URI
-                    if ($entity instanceof FileReadableInterface) {
-                        $uri = sprintf(
-                            '%s/%s%s%s.%s',
-                            $this->webPath,
-                            $this->useEnvDiscriminator ? $this->env . '/' : '',
-                            null === $class ? '' : $class . $s,
-                            $tree,
-                            $entity->getExtension()
-                        );
-                        $this->logger->debug(__METHOD__ . ' : uri = ' . $uri);
-                        $entity->setComputedUri($uri);
-                    }
-
-                    // Save
                     try {
-                        $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));
-                        $args->getEntityManager()->getUnitOfWork()->computeChangeSet($mdt, $entity);
+                        $this->fs->mkdir(pathinfo($path, PATHINFO_DIRNAME));
+                        $this->fs->rename($file->getRealPath(), $path, true);
+
+                        // Update
+                        $entity
+                            ->setFile(null)
+                            ->setComputedPath(realpath($path));
+
+                        // If this file is readable, save its URI
+                        if ($entity instanceof FileReadableInterface) {
+                            $uri = sprintf(
+                                '%s/%s%s%s.%s',
+                                $this->webPath,
+                                $this->useEnvDiscriminator ? $this->env . '/' : '',
+                                null === $class ? '' : $class . $s,
+                                $tree,
+                                $entity->getExtension()
+                            );
+                            $this->logger->debug(__METHOD__ . ' : uri = ' . $uri);
+                            $entity->setComputedUri($uri);
+                        }
+
+                        // Save
+                        $this->logger->debug(__METHOD__ . ' : saving in database');
+                        $args->getEntityManager()->flush();
+                        $this->logger->debug(__METHOD__ . ' : saved');
+                    } catch (IOException $e) {
+                        $this->logger->error(__METHOD__ . ' filesystem error : ' . $e->getMessage());
                     } catch (\Exception $e) {
                         $this->logger->error(__METHOD__ . ' : ' . $e->getMessage());
                     }
                 }
             }
         }
+    }
+
+    /**
+     * @param LifecycleEventArgs $args
+     */
+    public function postUpdate(LifecycleEventArgs $args)
+    {
+        $this->postLoadFile($args);
     }
 
     /**
