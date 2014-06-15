@@ -6,7 +6,6 @@
         <parameter key="eb_doctrine.event_listener.doctrine_salt_listener.class">EB\DoctrineBundle\EventListener\DoctrineSaltListener</parameter>
         <parameter key="eb_doctrine.event_listener.doctrine_slug_listener.class">EB\DoctrineBundle\EventListener\DoctrineSlugListener</parameter>
         <parameter key="eb_doctrine.event_listener.doctrine_updated_listener.class">EB\DoctrineBundle\EventListener\DoctrineUpdatedListener</parameter>
-        <parameter key="eb_doctrine.event_listener.doctrine_uri_listener.class">EB\DoctrineBundle\EventListener\DoctrineUriListener</parameter>
         <parameter key="eb_doctrine.event_listener.doctrine_user_listener.class">EB\DoctrineBundle\EventListener\DoctrineUserListener</parameter>
         <parameter key="eb_doctrine.event_listener.security_interactive_login_listener.class">EB\DoctrineBundle\EventListener\SecurityInteractiveLoginListener</parameter>
     </parameters>
@@ -40,11 +39,6 @@
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
         <service id="eb_doctrine.event_listener.doctrine_updated_listener" class="%eb_doctrine.event_listener.doctrine_updated_listener.class%">
-            <tag name="doctrine.event_listener" event="preUpdate"/>
-        </service>
-        <service id="eb_doctrine.event_listener.doctrine_uri_listener" class="%eb_doctrine.event_listener.doctrine_uri_listener.class%">
-            <argument id="eb_string" type="service"/>
-            <tag name="doctrine.event_listener" event="prePersist"/>
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
         <service id="eb_doctrine.event_listener.doctrine_user_listener" class="%eb_doctrine.event_listener.doctrine_user_listener.class%">

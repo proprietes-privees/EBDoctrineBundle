@@ -34,7 +34,7 @@ class DoctrineSlugListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof SlugInterface) {
-            $entity->setSlug($this->string->search($entity->getStringToSlug()));
+            $entity->setComputedSlug($this->string->slug($entity->getStringToSlug()));
         }
     }
 
@@ -45,7 +45,7 @@ class DoctrineSlugListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof SlugInterface) {
-            $entity->setSlug($this->string->search($entity->getStringToSlug()));
+            $entity->setComputedSlug($this->string->slug($entity->getStringToSlug()));
 
             // Save new value
             $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));

@@ -6,6 +6,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use EB\DoctrineBundle\Entity\FileInterface;
 use EB\DoctrineBundle\Entity\FileReadableInterface;
+use EB\DoctrineBundle\Entity\FileVersionableInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -184,14 +185,20 @@ class DoctrineFileListener
                         $tree = implode($s, str_split(str_pad($tree, $this->depth, '0', STR_PAD_LEFT), 1));
                     }
 
+                    // Version
+                    if ($entity instanceof FileVersionableInterface) {
+                        $entity->setComputedVersion(1 + $entity->getComputedVersion());
+                    }
+
                     // Create a path, and save it
                     $path = sprintf(
-                        '%s%s%s%s%s.%s',
+                        '%s%s%s%s%s%s.%s',
                         $entity instanceof FileReadableInterface ? ($this->kernelRootDir . $s . '..' . $s . 'web' . $this->webPath) : $this->securedPath,
                         $s,
                         true === $this->useEnvDiscriminator ? $this->env . $s : '',
                         null === $class ? '' : $class . $s,
                         $tree,
+                        $entity instanceof FileVersionableInterface ? '-' . $entity->getComputedVersion() : '',
                         $entity->getExtension()
                     );
                     $this->logger->debug(__METHOD__ . ' : path = ' . $path);
@@ -207,11 +214,12 @@ class DoctrineFileListener
                         // If this file is readable, save its URI
                         if ($entity instanceof FileReadableInterface) {
                             $uri = sprintf(
-                                '%s/%s%s%s.%s',
+                                '%s/%s%s%s%s.%s',
                                 $this->webPath,
                                 $this->useEnvDiscriminator ? $this->env . '/' : '',
                                 null === $class ? '' : $class . $s,
                                 $tree,
+                                $entity instanceof FileVersionableInterface ? '-' . $entity->getComputedVersion() : '',
                                 $entity->getExtension()
                             );
                             $this->logger->debug(__METHOD__ . ' : uri = ' . $uri);

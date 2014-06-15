@@ -13,9 +13,27 @@ trait FileVersionableTrait
 {
     /**
      * @var int
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $version;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getComputedVersion()
+    {
+        return $this->getVersion();
+    }
+
+    /**
+     * Get Version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
 
     /**
      * Set Version
@@ -32,12 +50,10 @@ trait FileVersionableTrait
     }
 
     /**
-     * Get Version
-     *
-     * @return int
+     * {@inheritdoc}
      */
-    public function getVersion()
+    public function setComputedVersion($version)
     {
-        return $this->version;
+        return $this->setVersion($version);
     }
 }

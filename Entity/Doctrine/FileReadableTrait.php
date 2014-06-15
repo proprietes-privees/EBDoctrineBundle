@@ -18,6 +18,24 @@ trait FileReadableTrait
     private $uri;
 
     /**
+     * {@inheritdoc}
+     */
+    public function getComputedUri()
+    {
+        return $this->getUri();
+    }
+
+    /**
+     * Get Uri
+     *
+     * @return null|string
+     */
+    public function getUri()
+    {
+        return $this->uri;
+    }
+
+    /**
      * Set Uri
      *
      * @param null|string $uri
@@ -32,12 +50,10 @@ trait FileReadableTrait
     }
 
     /**
-     * Get Uri
-     *
-     * @return null|string
+     * {@inheritdoc}
      */
-    public function getUri()
+    public function setComputedUri($uri)
     {
-        return $this->uri;
+        return $this->setUri($uri);
     }
 }

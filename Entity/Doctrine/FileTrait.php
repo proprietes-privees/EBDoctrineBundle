@@ -3,6 +3,8 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
+use EB\DoctrineBundle\Entity\FileInterface;
+use EB\DoctrineBundle\Entity\FileReadableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -43,10 +45,31 @@ trait FileTrait
     private $size;
 
     /**
+     * This uniqid is used to trigger doctrine
+     * events each time setFile is called (because
+     * the file field is not handled by doctrine)
+     *
+     * @var null|string
+     * @ORM\Column(type="string", length=13, nullable=true)
+     * @Assert\Length(max=13)
+     */
+    private $uniqid;
+
+    /**
      * @var null|\SplFileInfo
      * @Assert\File()
      */
     private $file;
+
+    /**
+     * Get Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
 
     /**
      * Set Filename
@@ -63,13 +86,13 @@ trait FileTrait
     }
 
     /**
-     * Get Filename
+     * Get Extension
      *
      * @return string
      */
-    public function getFilename()
+    public function getExtension()
     {
-        return $this->filename;
+        return $this->extension;
     }
 
     /**
@@ -87,13 +110,13 @@ trait FileTrait
     }
 
     /**
-     * Get Extension
+     * Get Mime
      *
      * @return string
      */
-    public function getExtension()
+    public function getMime()
     {
-        return $this->extension;
+        return $this->mime;
     }
 
     /**
@@ -111,37 +134,13 @@ trait FileTrait
     }
 
     /**
-     * Get Mime
+     * Get Size
      *
-     * @return string
+     * @return int
      */
-    public function getMime()
+    public function getSize()
     {
-        return $this->mime;
-    }
-
-    /**
-     * Set Path
-     *
-     * @param null|string $path
-     *
-     * @return FileTrait
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    /**
-     * Get Path
-     *
-     * @return null|string
-     */
-    public function getPath()
-    {
-        return $this->path;
+        return $this->size;
     }
 
     /**
@@ -159,13 +158,13 @@ trait FileTrait
     }
 
     /**
-     * Get Size
+     * Get File
      *
-     * @return int
+     * @return null|\SplFileInfo
      */
-    public function getSize()
+    public function getFile()
     {
-        return $this->size;
+        return $this->file;
     }
 
     /**
@@ -179,16 +178,95 @@ trait FileTrait
     {
         $this->file = $file;
 
+        $this->setUniqid(uniqid());
+
         return $this;
     }
 
     /**
-     * Get File
+     * Get Uniqid
      *
-     * @return null|\SplFileInfo
+     * @return null|string
      */
-    public function getFile()
+    public function getUniqid()
     {
-        return $this->file;
+        return $this->uniqid;
+    }
+
+    /**
+     * Set Uniqid
+     *
+     * @param null|string $uniqid Uniqid
+     *
+     * @return FileTrait
+     */
+    public function setUniqid($uniqid)
+    {
+        $this->uniqid = $uniqid;
+
+        return $this;
+    }
+
+    /**
+     * Remove all file trace
+     *
+     * @return FileTrait
+     */
+    public function removeFile()
+    {
+        if ($this instanceof FileInterface) {
+            $this->setComputedPath(null);
+        }
+        if ($this instanceof FileReadableInterface) {
+            $this->setComputedUri(null);
+        }
+
+        $this
+            ->setExtension(null)
+            ->setFilename(null)
+            ->setMime(null)
+            ->setSize(null);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getComputedPath()
+    {
+        return $this->getPath();
+    }
+
+    /**
+     * Get Path
+     *
+     * @return null|string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Set Path
+     *
+     * @param null|string $path
+     *
+     * @return FileTrait
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setComputedPath($path)
+    {
+        return $this->setPath($path);
     }
 }

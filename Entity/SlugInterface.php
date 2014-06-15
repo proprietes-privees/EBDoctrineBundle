@@ -23,5 +23,12 @@ interface SlugInterface
      *
      * @return SlugInterface
      */
-    public function setSlug($slug);
+    public function setComputedSlug($slug);
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getComputedSlug();
 }
