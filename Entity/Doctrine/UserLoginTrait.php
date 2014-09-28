@@ -3,6 +3,7 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trait UserLoginTrait
@@ -14,12 +15,14 @@ trait UserLoginTrait
     /**
      * @var null|\DateTime
      * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\DateTime()
      */
     private $previousLoginDate;
 
     /**
      * @var null|\DateTime
      * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\DateTime()
      */
     private $currentLoginDate;
 
@@ -28,7 +31,7 @@ trait UserLoginTrait
      *
      * @param null|\DateTime $previousLoginDate
      *
-     * @return UserLoginTrait
+     * @return $this
      */
     public function setPreviousLoginDate(\DateTime $previousLoginDate = null)
     {
@@ -52,7 +55,7 @@ trait UserLoginTrait
      *
      * @param null|\DateTime $currentLoginDate
      *
-     * @return UserLoginTrait
+     * @return $this
      */
     public function setCurrentLoginDate(\DateTime $currentLoginDate = null)
     {

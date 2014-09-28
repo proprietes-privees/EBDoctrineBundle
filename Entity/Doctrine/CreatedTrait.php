@@ -3,6 +3,7 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trait CreatedTrait
@@ -14,6 +15,7 @@ trait CreatedTrait
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $created;
 
@@ -32,7 +34,7 @@ trait CreatedTrait
      *
      * @param \DateTime $created
      *
-     * @return CreatedTrait
+     * @return $this
      */
     public function setCreated(\DateTime $created = null)
     {

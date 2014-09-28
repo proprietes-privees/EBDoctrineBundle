@@ -3,6 +3,7 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trait FileReadableTrait
@@ -14,6 +15,8 @@ trait FileReadableTrait
     /**
      * @var string
      * @ORM\Column(type="string", nullable=true)
+     * @Assert\Type("string")
+     * @Assert\Length(max=255)
      */
     private $uri;
 
@@ -40,7 +43,7 @@ trait FileReadableTrait
      *
      * @param null|string $uri
      *
-     * @return FileReadableTrait
+     * @return $this
      */
     public function setUri($uri = null)
     {

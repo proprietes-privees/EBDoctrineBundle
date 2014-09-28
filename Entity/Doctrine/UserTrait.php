@@ -26,11 +26,14 @@ trait UserTrait
     /**
      * @var string
      * @ORM\Column(type="string", length=255)
+     * @Assert\Type("string")
+     * @Assert\Length(max=255)
      */
     private $password;
 
     /**
      * @var string
+     * @Assert\Type("string")
      * @Assert\Length(min="6", max="50")
      */
     private $rawPassword;
@@ -48,7 +51,7 @@ trait UserTrait
      *
      * @param string $username
      *
-     * @return UserTrait
+     * @return $this
      */
     public function setUsername($username)
     {
@@ -72,7 +75,7 @@ trait UserTrait
      *
      * @param string $password
      *
-     * @return UserTrait
+     * @return $this
      */
     public function setPassword($password)
     {
@@ -96,7 +99,7 @@ trait UserTrait
      *
      * @param string $rawPassword
      *
-     * @return UserTrait
+     * @return $this
      */
     public function setRawPassword($rawPassword)
     {

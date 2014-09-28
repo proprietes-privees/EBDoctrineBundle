@@ -3,6 +3,7 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trait SlugTrait
@@ -14,6 +15,8 @@ trait SlugTrait
     /**
      * @var string
      * @ORM\Column(type="string", length=255)
+     * @Assert\Type("string")
+     * @Assert\Length(max=255)
      */
     private $slug;
 
@@ -48,7 +51,7 @@ trait SlugTrait
      *
      * @param string $slug
      *
-     * @return SlugTrait
+     * @return $this
      */
     public function setSlug($slug)
     {

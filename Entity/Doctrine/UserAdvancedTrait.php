@@ -3,7 +3,7 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trait UserAdvancedTrait
@@ -82,7 +82,7 @@ trait UserAdvancedTrait
      *
      * @param bool $enabled Enabled
      *
-     * @return AdvancedUserTrait
+     * @return $this
      */
     public function setEnabled($enabled)
     {
@@ -106,7 +106,7 @@ trait UserAdvancedTrait
      *
      * @param null|\DateTime $accountExpired AccountExpired
      *
-     * @return AdvancedUserTrait
+     * @return $this
      */
     public function setAccountExpired(\DateTime $accountExpired = null)
     {
@@ -130,7 +130,7 @@ trait UserAdvancedTrait
      *
      * @param null|\DateTime $accountLocked AccountLocked
      *
-     * @return AdvancedUserTrait
+     * @return $this
      */
     public function setAccountLocked(\DateTime $accountLocked = null)
     {
@@ -154,7 +154,7 @@ trait UserAdvancedTrait
      *
      * @param null|\DateTime $credentialsExpired CredentialsExpired
      *
-     * @return AdvancedUserTrait
+     * @return $this
      */
     public function setCredentialsExpired(\DateTime $credentialsExpired = null)
     {

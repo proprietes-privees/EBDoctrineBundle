@@ -3,6 +3,7 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trait FileReadableTrait
@@ -14,6 +15,7 @@ trait FileVersionableTrait
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type("int")
      */
     private $version;
 
@@ -40,7 +42,7 @@ trait FileVersionableTrait
      *
      * @param int $version
      *
-     * @return FileVersionableTrait
+     * @return $this
      */
     public function setVersion($version)
     {

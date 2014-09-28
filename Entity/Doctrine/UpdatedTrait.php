@@ -3,6 +3,7 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trait UpdatedTrait
@@ -14,6 +15,7 @@ trait UpdatedTrait
     /**
      * @var null|\DateTime
      * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\DateTime()
      */
     private $updated;
 
@@ -22,7 +24,7 @@ trait UpdatedTrait
      *
      * @param null|\DateTime $updated
      *
-     * @return UpdatedTrait
+     * @return $this
      */
     public function setUpdated(\DateTime $updated = null)
     {

@@ -3,6 +3,7 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trait SaltTrait
@@ -14,6 +15,8 @@ trait SaltTrait
     /**
      * @var string
      * @ORM\Column(type="string", length=255)
+     * @Assert\Type("string")
+     * @Assert\Length(max=255)
      */
     private $salt;
 
@@ -22,7 +25,7 @@ trait SaltTrait
      *
      * @param string $salt
      *
-     * @return SaltTrait
+     * @return $this
      */
     public function setSalt($salt)
     {

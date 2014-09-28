@@ -3,6 +3,7 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trait UserPasswordDateTrait
@@ -14,6 +15,7 @@ trait UserPasswordDateTrait
     /**
      * @var null|\DateTime
      * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\DateTime()
      */
     private $passwordUpdated;
 
@@ -22,7 +24,7 @@ trait UserPasswordDateTrait
      *
      * @param null|\DateTime $passwordUpdated
      *
-     * @return UserPasswordDateTrait
+     * @return $this
      */
     public function setPasswordUpdated(\DateTime $passwordUpdated = null)
     {

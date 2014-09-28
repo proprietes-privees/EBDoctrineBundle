@@ -17,30 +17,39 @@ trait FileTrait
     /**
      * @var string
      * @ORM\Column(type="string", nullable=true)
+     * @Assert\Type("string")
+     * @Assert\Length(max=255)
      */
     private $filename;
 
     /**
      * @var string
      * @ORM\Column(type="string", nullable=true)
+     * @Assert\Type("string")
+     * @Assert\Length(max=255)
      */
     private $extension;
 
     /**
      * @var string
      * @ORM\Column(type="string", nullable=true)
+     * @Assert\Type("string")
+     * @Assert\Length(max=255)
      */
     private $mime;
 
     /**
      * @var null|string
      * @ORM\Column(type="string", nullable=true)
+     * @Assert\Type("string")
+     * @Assert\Length(max=255)
      */
     private $path;
 
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type("int")
      */
     private $size;
 
@@ -76,7 +85,7 @@ trait FileTrait
      *
      * @param string $filename
      *
-     * @return FileTrait
+     * @return $this
      */
     public function setFilename($filename)
     {
@@ -100,7 +109,7 @@ trait FileTrait
      *
      * @param string $extension
      *
-     * @return FileTrait
+     * @return $this
      */
     public function setExtension($extension)
     {
@@ -124,7 +133,7 @@ trait FileTrait
      *
      * @param string $mime
      *
-     * @return FileTrait
+     * @return $this
      */
     public function setMime($mime)
     {
@@ -148,7 +157,7 @@ trait FileTrait
      *
      * @param int $size
      *
-     * @return FileTrait
+     * @return $this
      */
     public function setSize($size)
     {
@@ -172,7 +181,7 @@ trait FileTrait
      *
      * @param null|\SplFileInfo $file
      *
-     * @return FileTrait
+     * @return $this
      */
     public function setFile(\SplFileInfo $file = null)
     {
@@ -198,7 +207,7 @@ trait FileTrait
      *
      * @param null|string $uniqid Uniqid
      *
-     * @return FileTrait
+     * @return $this
      */
     public function setUniqid($uniqid)
     {
@@ -210,7 +219,7 @@ trait FileTrait
     /**
      * Remove all file trace
      *
-     * @return FileTrait
+     * @return $this
      */
     public function removeFile()
     {
@@ -253,7 +262,7 @@ trait FileTrait
      *
      * @param null|string $path
      *
-     * @return FileTrait
+     * @return $this
      */
     public function setPath($path)
     {
