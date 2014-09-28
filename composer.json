@@ -27,9 +27,8 @@
         "phpunit/phpunit": "*"
     },
     "autoload": {
-        "psr-0": {
-            "EB\\DoctrineBundle": ""
+        "psr-4": {
+            "EB\\DoctrineBundle\\": ""
         }
-    },
-    "target-dir": "EB/DoctrineBundle"
+    }
 }
