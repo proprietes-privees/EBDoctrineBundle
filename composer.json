@@ -21,7 +21,7 @@
         "symfony/symfony": "*",
         "doctrine/doctrine-bundle": "*",
         "symfony/filesystem": "*",
-        "emmanuelballery/eb-stringbundle": "*"
+        "emmanuelballery/eb-stringbundle": "0.0.1"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
