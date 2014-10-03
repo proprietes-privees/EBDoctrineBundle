@@ -5,6 +5,7 @@ namespace EB\DoctrineBundle\Entity\Doctrine;
 use Doctrine\ORM\Mapping as ORM;
 use EB\DoctrineBundle\Entity\FileInterface;
 use EB\DoctrineBundle\Entity\FileReadableInterface;
+use EB\DoctrineBundle\Entity\FileVersionableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -228,6 +229,9 @@ trait FileTrait
         }
         if ($this instanceof FileReadableInterface) {
             $this->setComputedUri(null);
+        }
+        if ($this instanceof FileVersionableInterface) {
+            $this->setComputedVersion(1 + $this->getComputedVersion());
         }
 
         $this
