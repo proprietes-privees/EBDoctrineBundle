@@ -29,6 +29,7 @@ class EBDoctrineExtension extends Extension
 
         // Load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader->load('event_listener.xml');
+        $loader->load('paginator.xml');
     }
 }

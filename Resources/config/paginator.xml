@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="eb.doctrine_bundle.paginator.paginator_helper.class">EB\DoctrineBundle\Paginator\PaginatorHelper</parameter>
+    </parameters>
+    <services>
+        <service id="eb_paginator_helper" alias="eb.doctrine_bundle.paginator.paginator_helper"/>
+        <service id="eb.doctrine_bundle.paginator.paginator_helper" class="%eb.doctrine_bundle.paginator.paginator_helper.class%">
+            <tag name="kernel.event_listener" event="kernel.request"/>
+        </service>
+    </services>
+</container>
