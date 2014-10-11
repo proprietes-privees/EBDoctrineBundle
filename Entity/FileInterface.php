@@ -29,14 +29,14 @@ interface FileInterface
     /**
      * @return string
      */
-    public function getComputedPath();
+    public function getPath();
 
     /**
      * @param string $path
      *
      * @return FileInterface
      */
-    public function setComputedPath($path);
+    public function setPath($path);
 
     /**
      * @param string $filename

@@ -44,12 +44,12 @@ class FixCommand extends ContainerAwareCommand
                 $entities = $em->getRepository($metadata->getName())->findAll();
                 foreach ($entities as $entity) {
                     $slug = $stringService->slug($entity->getStringToSlug());
-                    if($slug === $entity->getComputedSlug()) {
+                    if($slug === $entity->getSlug()) {
                         $output->writeln(sprintf('<info>Slug valid for %s</info> : %s', $entity, $slug));
                     }else{
                         $output->writeln(sprintf('<error>Fixing slug for %s</error> : %s', $entity, $slug));
                     }
-                    $entity->setComputedSlug($slug);
+                    $entity->setSlug($slug);
                 }
             }
         }

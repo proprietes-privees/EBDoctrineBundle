@@ -12,12 +12,12 @@ interface FileReadableInterface extends FileInterface
     /**
      * @return string
      */
-    public function getComputedUri();
+    public function getUri();
 
     /**
      * @param string $uri
      *
      * @return FileReadableInterface
      */
-    public function setComputedUri($uri);
+    public function setUri($uri);
 }

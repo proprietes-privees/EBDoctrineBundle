@@ -3,7 +3,6 @@
 namespace EB\DoctrineBundle\Entity\Doctrine;
 
 use Doctrine\ORM\Mapping as ORM;
-use EB\DoctrineBundle\Entity\FileInterface;
 use EB\DoctrineBundle\Entity\FileReadableInterface;
 use EB\DoctrineBundle\Entity\FileVersionableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -224,31 +223,21 @@ trait FileTrait
      */
     public function removeFile()
     {
-        if ($this instanceof FileInterface) {
-            $this->setComputedPath(null);
-        }
-        if ($this instanceof FileReadableInterface) {
-            $this->setComputedUri(null);
-        }
-        if ($this instanceof FileVersionableInterface) {
-            $this->setComputedVersion(1 + $this->getComputedVersion());
-        }
-
         $this
+            ->setPath(null)
             ->setExtension(null)
             ->setFilename(null)
             ->setMime(null)
             ->setSize(null);
 
-        return $this;
-    }
+        if ($this instanceof FileReadableInterface) {
+            $this->setUri(null);
+        }
+        if ($this instanceof FileVersionableInterface) {
+            $this->setVersion(1 + $this->getVersion());
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getComputedPath()
-    {
-        return $this->getPath();
+        return $this;
     }
 
     /**
@@ -273,13 +262,5 @@ trait FileTrait
         $this->path = $path;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setComputedPath($path)
-    {
-        return $this->setPath($path);
     }
 }

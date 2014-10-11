@@ -99,32 +99,21 @@ class DoctrineFileListener
         $entity = $args->getEntity();
         if ($entity instanceof FileInterface) {
             if (null !== $file = $entity->getFile()) {
-                $this->load($entity, $file);
-            }
-        }
-    }
+                if (null === $entity->getPath() || $entity->getPath() !== $file->getRealPath()) {
+                    $entity->setFilename($file->getFilename());
+                    $entity->setSize($file->getSize());
+                    $entity->setExtension($file->getExtension());
 
-    /**
-     * Load file
-     *
-     * @param FileInterface $entity
-     * @param \SplFileInfo  $file
-     */
-    private function load(FileInterface $entity, \SplFileInfo $file)
-    {
-        if (null === $entity->getComputedPath() || $entity->getComputedPath() !== $file->getRealPath()) {
-            $entity->setFilename($file->getFilename());
-            $entity->setSize($file->getSize());
-            $entity->setExtension($file->getExtension());
-
-            // Improve data with uploadedfile details
-            if ($file instanceof UploadedFile) {
-                $entity->setFilename($file->getClientOriginalName());
-                $entity->setExtension($file->guessExtension());
-                $entity->setMime($file->getClientMimeType());
-            } elseif (function_exists('finfo_open')) {
-                $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                $entity->setMime(finfo_file($finfo, $file->getRealPath()));
+                    // Improve data with uploadedfile details
+                    if ($file instanceof UploadedFile) {
+                        $entity->setFilename($file->getClientOriginalName());
+                        $entity->setExtension($file->guessExtension());
+                        $entity->setMime($file->getClientMimeType());
+                    } elseif (function_exists('finfo_open')) {
+                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                        $entity->setMime(finfo_file($finfo, $file->getRealPath()));
+                    }
+                }
             }
         }
     }
@@ -140,10 +129,21 @@ class DoctrineFileListener
         $entity = $args->getEntity();
         if ($entity instanceof FileInterface) {
             if (null !== $file = $entity->getFile()) {
-                $this->load($entity, $file);
+                if (null === $entity->getPath() || $entity->getPath() !== $file->getRealPath()) {
+                    $args->setNewValue('filename', $file->getFilename());
+                    $args->setNewValue('size', $file->getSize());
+                    $args->setNewValue('extension', $file->getExtension());
 
-                $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));
-                $args->getEntityManager()->getUnitOfWork()->computeChangeSet($mdt, $entity);
+                    // Improve data with uploadedfile details
+                    if ($file instanceof UploadedFile) {
+                        $args->setNewValue('filename', $file->getClientOriginalName());
+                        $args->setNewValue('extension', $file->guessExtension());
+                        $args->setNewValue('mime', $file->getClientMimeType());
+                    } elseif (function_exists('finfo_open')) {
+                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                        $args->setNewValue('mime', finfo_file($finfo, $file->getRealPath()));
+                    }
+                }
             }
         }
     }
@@ -152,6 +152,14 @@ class DoctrineFileListener
      * @param LifecycleEventArgs $args
      */
     public function postPersist(LifecycleEventArgs $args)
+    {
+        $this->postLoadFile($args);
+    }
+
+    /**
+     * @param LifecycleEventArgs $args
+     */
+    public function postUpdate(LifecycleEventArgs $args)
     {
         $this->postLoadFile($args);
     }
@@ -167,10 +175,12 @@ class DoctrineFileListener
         $entity = $args->getEntity();
         if ($entity instanceof FileInterface) {
             if (null !== $file = $entity->getFile()) {
-                if ($file->getRealPath() !== $entity->getComputedPath()) {
+                if ($file->getRealPath() !== $entity->getPath()) {
+                    // Choose this filesystem directory separator
                     $s = DIRECTORY_SEPARATOR;
 
                     // Save file in different folders according to there class
+                    // eg: /var/www/data/user for User entity
                     $class = null;
                     if ($this->useClassDiscriminator) {
                         $class = str_replace('\\', $s, mb_strtolower(get_class($entity)));
@@ -179,18 +189,25 @@ class DoctrineFileListener
                         }
                     }
 
-                    // Create a tree
+                    // Create a tree using this current file ID
+                    // eg: ID 1259 will create a tree like /0/0/0/1/2/5/9
+                    // The actual depth of the tree is a configuration
                     $tree = $entity->getId();
                     if (0 < $this->depth) {
                         $tree = implode($s, str_split(str_pad($tree, $this->depth, '0', STR_PAD_LEFT), 1));
                     }
 
-                    // Version
+                    // Increase version if this is a versionable resource
                     if ($entity instanceof FileVersionableInterface) {
-                        $entity->setComputedVersion(1 + $entity->getComputedVersion());
+                        $entity->setVersion(1 + $entity->getVersion());
                     }
 
-                    // Create a path, and save it
+                    // Create a path
+                    // - Choose the path (wether it's readable or not)
+                    // - Use environment folder or not
+                    // - Use class folder or not
+                    // - Use tree
+                    // - Use version or not
                     $path = sprintf(
                         '%s%s%s%s%s%s.%s',
                         $entity instanceof FileReadableInterface ? ($this->kernelRootDir . $s . '..' . $s . 'web' . $this->webPath) : $this->securedPath,
@@ -198,20 +215,25 @@ class DoctrineFileListener
                         true === $this->useEnvDiscriminator ? $this->env . $s : '',
                         null === $class ? '' : $class . $s,
                         $tree,
-                        $entity instanceof FileVersionableInterface ? '-' . $entity->getComputedVersion() : '',
+                        $entity instanceof FileVersionableInterface ? '-' . $entity->getVersion() : '',
                         $entity->getExtension()
                     );
                     $this->logger->debug(__METHOD__ . ' : path = ' . $path);
+
+                    // Save this file
                     try {
+                        // Create the holding folder
                         $this->fs->mkdir(pathinfo($path, PATHINFO_DIRNAME));
+
+                        // Move the downloaded file to its new location
                         $this->fs->rename($file->getRealPath(), $path, true);
 
-                        // Update
+                        // Remove file object from the entity and fix the real path
                         $entity
                             ->setFile(null)
-                            ->setComputedPath(realpath($path));
+                            ->setPath(realpath($path));
 
-                        // If this file is readable, save its URI
+                        // If this file is readable, save its URI too
                         if ($entity instanceof FileReadableInterface) {
                             $uri = sprintf(
                                 '%s/%s%s%s%s.%s',
@@ -219,11 +241,11 @@ class DoctrineFileListener
                                 $this->useEnvDiscriminator ? $this->env . '/' : '',
                                 null === $class ? '' : $class . $s,
                                 $tree,
-                                $entity instanceof FileVersionableInterface ? '-' . $entity->getComputedVersion() : '',
+                                $entity instanceof FileVersionableInterface ? '-' . $entity->getVersion() : '',
                                 $entity->getExtension()
                             );
                             $this->logger->debug(__METHOD__ . ' : uri = ' . $uri);
-                            $entity->setComputedUri($uri);
+                            $entity->setUri($uri);
                         }
 
                         // Save
@@ -241,14 +263,6 @@ class DoctrineFileListener
     }
 
     /**
-     * @param LifecycleEventArgs $args
-     */
-    public function postUpdate(LifecycleEventArgs $args)
-    {
-        $this->postLoadFile($args);
-    }
-
-    /**
      * Remove file from filesystem
      * when entity is deleted
      *
@@ -258,7 +272,7 @@ class DoctrineFileListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof FileInterface) {
-            if (null !== $path = $entity->getComputedPath()) {
+            if (null !== $path = $entity->getPath()) {
                 $this->fs->remove($path);
             }
         }

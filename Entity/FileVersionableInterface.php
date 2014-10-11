@@ -12,12 +12,12 @@ interface FileVersionableInterface
     /**
      * @return int
      */
-    public function getComputedVersion();
+    public function getVersion();
 
     /**
      * @param int $version
      *
-     * @return FileInterface
+     * @return FileVersionableInterface
      */
-    public function setComputedVersion($version);
+    public function setVersion($version);
 }

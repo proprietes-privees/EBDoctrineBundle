@@ -22,19 +22,9 @@ trait FileVersionableTrait
     /**
      * {@inheritdoc}
      */
-    public function getComputedVersion()
-    {
-        return $this->getVersion();
-    }
-
-    /**
-     * Get Version
-     *
-     * @return int
-     */
     public function getVersion()
     {
-        return $this->version;
+        return $this->getVersion();
     }
 
     /**
@@ -49,13 +39,5 @@ trait FileVersionableTrait
         $this->version = $version;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setComputedVersion($version)
-    {
-        return $this->setVersion($version);
     }
 }
