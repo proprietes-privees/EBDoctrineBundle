@@ -21,22 +21,6 @@ trait SlugTrait
     private $slug;
 
     /**
-     * {@inheritdoc}
-     */
-    public function setComputedSlug($slug)
-    {
-        return $this->setSlug($slug);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getComputedSlug()
-    {
-        return $this->getSlug();
-    }
-
-    /**
      * Get Slug
      *
      * @return string
