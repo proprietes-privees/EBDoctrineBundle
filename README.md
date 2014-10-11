@@ -1,68 +1,89 @@
-EBDoctrineBundle
-================
+# EBDoctrineBundle
 
-Set of doctrine listeners.
-
-EBFileBundle (merged)
-=====================
+Set of Doctrine listeners.
 
 ## Configuration
 
-```yaml
-eb_doctrine:
-  useEnvDiscriminator: false
-  depth: 0
-  path:
-    web: '/somewhere/readable'
-    secured: '%kernel.root_dir%/cache/somewhere/not/readable'
-```
+    eb_doctrine:
+
+        # Wether env is used in paths
+        useEnvDiscriminator:  true # Example: true
+
+        # Wether class is used in paths
+        useClassDiscriminator:  true # Example: true
+
+        # File tree depth
+        depth:                0 # Example: 5
+        path:
+
+            # Web file path.
+            web:                  /files # Example: /files
+
+            # Secured file path.
+            secured:              '%kernel.root_dir%/cache/%kernel.environment%/files' # Example: /var/my-data
 
 ## Usage
 
-  - Create an entity
-  - Implement one of these interface or superclass:
-    - EB\DoctrineBundle\Entity\FileInterface (secured, no web access)
-    - EB\DoctrineBundle\Entity\FileReadableInterface (add web access)
-  - Add an \SplFileInfo to your entity using "setFile" method
-  - EB\DoctrineBundle\Entity\FileListener will automatically :
-    - Save file in the file system
-    - Save its name, extension and size
-    - Add a path/uri to this entity
-    - Delete file when entity is deleted
+### Track ``created`` date
 
-EBUserBundle (merged)
-=====================
+  - Implement ``EB\DoctrineBundle\Entity\CreatedInterface``
+  - Use ``EB\DoctrineBundle\Entity\Doctrine\CreatedTrait``
+  - The creation date will always be saved in the ``created`` field
 
-This bundle automates :
-  - The generation of a salt
-  - The generation of a user password
-  - The persistence of last and current user login dates
-  - The persistence of last password update date
+### Track ``updated`` date
 
-# Salt
-  - Your Salted entity has to inherit SaltedInterface
-  - When the entity is persisted or updated, a new salt will be generated
+  - Implement ``EB\DoctrineBundle\Entity\UpdatedInterface``
+  - Use ``EB\DoctrineBundle\Entity\Doctrine\UpdatedTrait``
+  - The update date will always be saved in the ``updated`` field
+  - This date will be ``null`` when this entity has never been updated
 
-# User
-  - Your User entity has to inherit UserInterface.
-  - When a new password is entered, the plain value has to be set in the rawPassword field.
-  - When the entity is persisted or updated, and the rawPassword field is not empty, the listener will encode the password before the database persistence.
+### Generate ``slug``
 
-Add a listener in your User forms to be sure that Doctrine sees the actual changes in its managed entity. Something like :
+  - Implement ``EB\DoctrineBundle\Entity\SlugInterface``
+  - Use ``EB\DoctrineBundle\Entity\Doctrine\SlugTrait``
+  - Define your own ``getStringToSlug`` method telling the listener what string needs to be cleaned
+  - The slug will always be saved in the ``slug`` field
+  - The command ``eb:doctrine:fix`` is able to re-evaluate each slug field in your database
 
-```php
-<?php
+### Generate ``salt``
 
-class UserType extends AbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
-            $user = $event->getData();
-            if ($user instanceof User && null !== $user->getRawPassword()) {
-                $user->setPassword('dirty');
-            }
-        });
-    }
-}
-```
+  - Implement ``EB\DoctrineBundle\Entity\SaltInterface``
+  - Use ``EB\DoctrineBundle\Entity\Doctrine\SaltTrait``
+  - The salt will always be saved in the ``salt`` field
+  - Currently the salt is a sha512 hash (see ``EB\DoctrineBundle\Salt\SaltTrait``)
+
+### Save a file with an entity
+
+  - Implement one of these interfaces :
+    - ``EB\DoctrineBundle\Entity\FileInterface`` (if you don't want a direct access via your webserver)
+    - ``EB\DoctrineBundle\Entity\FileReadableInterface`` (stored in your web folder, add an URI path)
+    - ``EB\DoctrineBundle\Entity\FileVersionableInterface`` (track file version)
+  - Use those traits :
+    - ``EB\DoctrineBundle\Entity\Doctrine\FileTrait``
+    - ``EB\DoctrineBundle\Entity\Doctrine\FileReadableTrait``
+    - ``EB\DoctrineBundle\Entity\Doctrine\FileVersionableTrait``
+  - Add an ``\SplFileInfo`` or an ``UploadedFile`` to your entity using ``setFile`` method
+  - ``EB\DoctrineBundle\Entity\FileListener`` will automatically :
+    - Save this file in the filesystem (using the entity ID and your configuration)
+    - Save its ``filename``, ``extension``, ``size`` and ``mime``
+    - Save a ``uniqid`` (this is a trick to create mapped updates when using forms with unmapped ``file`` field)
+    - Add a ``path``, the current realpath of the file in the filesystem
+    - Add an ``uri``, from the web directory
+    - Increase ``version`` if necessary
+    - Delete the file in the filesystem when the entity is removed
+
+### Deal with users
+
+  - Implement one of these interfaces :
+    - ``EB\DoctrineBundle\Entity\UserInterface``
+    - ``EB\DoctrineBundle\Entity\UserLoginInterface``
+    - ``EB\DoctrineBundle\Entity\UserPasswordDateInterface``
+  - Use those traits :
+    - ``EB\DoctrineBundle\Entity\Doctrine\UserTrait``
+    - ``EB\DoctrineBundle\Entity\Doctrine\UserAdvancedTrait``
+    - ``EB\DoctrineBundle\Entity\Doctrine\UserLoginTrait``
+    - ``EB\DoctrineBundle\Entity\Doctrine\UserPasswordDateTrait``
+  - The ``rawPassword`` will always be encoded into a ``password`` when saved
+  - Add all required fields and methods to create a user
+  - Track current and previous login dates
+  - Track password update date
