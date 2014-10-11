@@ -6,6 +6,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use EB\DoctrineBundle\Entity\UserInterface;
 use EB\DoctrineBundle\Entity\UserPasswordDateInterface;
+use EB\DoctrineBundle\Salt\SaltTrait;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
@@ -15,6 +16,8 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
  */
 class DoctrineUserListener
 {
+    use SaltTrait;
+
     /**
      * @var EncoderFactoryInterface
      */
@@ -59,15 +62,5 @@ class DoctrineUserListener
                 }
             }
         }
-    }
-
-    /**
-     * Generate salt
-     *
-     * @return string
-     */
-    private function generateSalt()
-    {
-        return hash('sha512', uniqid('encode', true) . time() . mt_rand(1, 999999999));
     }
 }

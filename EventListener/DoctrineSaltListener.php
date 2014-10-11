@@ -5,6 +5,7 @@ namespace EB\DoctrineBundle\EventListener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use EB\DoctrineBundle\Entity\SaltInterface;
+use EB\DoctrineBundle\Salt\SaltTrait;
 
 /**
  * Class DoctrineSaltListener
@@ -13,6 +14,8 @@ use EB\DoctrineBundle\Entity\SaltInterface;
  */
 class DoctrineSaltListener
 {
+    use SaltTrait;
+
     /**
      * @param LifecycleEventArgs $args
      */
@@ -33,15 +36,5 @@ class DoctrineSaltListener
         if ($entity instanceof SaltInterface) {
             $args->setNewValue('salt', $this->generateSalt());
         }
-    }
-
-    /**
-     * Generate salt
-     *
-     * @return string
-     */
-    private function generateSalt()
-    {
-        return hash('sha512', uniqid('encode', true) . time() . mt_rand(1, 999999999));
     }
 }
