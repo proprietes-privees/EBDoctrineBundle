@@ -19,11 +19,7 @@ class DoctrineUpdatedListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof UpdatedInterface) {
-            $entity->setUpdated(new \DateTime());
-
-            // Save new value
-            $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));
-            $args->getEntityManager()->getUnitOfWork()->recomputeSingleEntityChangeSet($mdt, $entity);
+            $args->setNewValue('updated', new \DateTime());
         }
     }
 }
