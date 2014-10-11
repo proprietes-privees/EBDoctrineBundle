@@ -98,6 +98,23 @@ Set of Doctrine listeners.
   - Track current and previous login dates
   - Track password update date
 
-### Use Doctrine event to populate session flash bag messages
+### Use Doctrine events to populate session flash bag messages
 
   - Implement ``EB\DoctrineBundle\Entity\LoggableInterface``
+  - Configure :
+    - Persisted message : '%entity% saved !'
+    - Updated message : '%entity% updated !'
+    - Removed message : '%entity% removed !'
+  - All doctrine events will be written in user session flashbag
+
+You can simply display those messages using Twig :
+
+```twig
+    {% for level,flashes in app.session.flashBag.all() %}
+        <ul class="alert alert-{{ level }}">
+            {% for flash in flashes %}
+                <li>{{ flash }}</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+```
