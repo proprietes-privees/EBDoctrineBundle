@@ -16,7 +16,7 @@ trait UserAdvancedTrait
      * @var bool
      * @ORM\Column(type="boolean")
      */
-    private $enabled;
+    private $enabled = true;
 
     /**
      * @var null|\DateTime
