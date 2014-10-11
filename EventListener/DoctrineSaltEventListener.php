@@ -8,11 +8,11 @@ use EB\DoctrineBundle\Entity\SaltInterface;
 use EB\DoctrineBundle\Salt\SaltTrait;
 
 /**
- * Class DoctrineSaltListener
+ * Class DoctrineSaltEventListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class DoctrineSaltListener
+class DoctrineSaltEventListener
 {
     use SaltTrait;
 
@@ -34,7 +34,7 @@ class DoctrineSaltListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof SaltInterface) {
-            $args->setNewValue('salt', $this->generateSalt());
+            $entity->setSalt($this->generateSalt());
         }
     }
 }

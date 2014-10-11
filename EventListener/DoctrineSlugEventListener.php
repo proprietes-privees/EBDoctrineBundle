@@ -8,11 +8,11 @@ use EB\DoctrineBundle\Entity\SlugInterface;
 use EB\StringBundle\String\StringService;
 
 /**
- * Class DoctrineSlugListener
+ * Class DoctrineSlugEventListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class DoctrineSlugListener
+class DoctrineSlugEventListener
 {
     /**
      * @var StringService
@@ -45,7 +45,7 @@ class DoctrineSlugListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof SlugInterface) {
-            $args->setNewValue('slug', $this->string->slug($entity->getStringToSlug()));
+            $entity->setSlug($this->string->slug($entity->getStringToSlug()));
         }
     }
 }

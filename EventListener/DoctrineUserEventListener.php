@@ -10,11 +10,11 @@ use EB\DoctrineBundle\Salt\SaltTrait;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
- * Class DoctrineUserListener
+ * Class DoctrineUserEventListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class DoctrineUserListener
+class DoctrineUserEventListener
 {
     use SaltTrait;
 
@@ -53,12 +53,12 @@ class DoctrineUserListener
         $entity = $args->getEntity();
         if ($entity instanceof UserInterface) {
             if (null !== $raw = $entity->getRawPassword()) {
-                $args->setNewValue('salt', $salt = $this->generateSalt());
-                $args->setNewValue('password', $this->encoderFactory->getEncoder($entity)->encodePassword($raw, $salt));
+                $entity->setSalt($salt = $this->generateSalt());
+                $entity->setPassword($this->encoderFactory->getEncoder($entity)->encodePassword($raw, $salt));
 
                 // Track last password update
                 if ($entity instanceof UserPasswordDateInterface) {
-                    $args->setNewValue('passwordUpdated', new \DateTime());
+                    $entity->setPasswordUpdated(new \DateTime());
                 }
             }
         }

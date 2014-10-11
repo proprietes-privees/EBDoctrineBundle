@@ -13,11 +13,11 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class DoctrineFileListener
+ * Class DoctrineFileEventListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class DoctrineFileListener
+class DoctrineFileEventListener
 {
     /**
      * @var Filesystem
@@ -130,18 +130,23 @@ class DoctrineFileListener
         if ($entity instanceof FileInterface) {
             if (null !== $file = $entity->getFile()) {
                 if (null === $entity->getPath() || $entity->getPath() !== $file->getRealPath()) {
-                    $args->setNewValue('filename', $file->getFilename());
-                    $args->setNewValue('size', $file->getSize());
-                    $args->setNewValue('extension', $file->getExtension());
+                    $entity
+                        ->setFilename($file->getFilename())
+                        ->setSize($file->getSize())
+                        ->setExtension($file->getExtension());
 
-                    // Improve data with uploadedfile details
+                    // Improve data with uploaded file details
                     if ($file instanceof UploadedFile) {
-                        $args->setNewValue('filename', $file->getClientOriginalName());
-                        $args->setNewValue('extension', $file->guessExtension());
-                        $args->setNewValue('mime', $file->getClientMimeType());
-                    } elseif (function_exists('finfo_open')) {
+                        $entity
+                            ->setFilename($file->getClientOriginalName())
+                            ->setExtension($file->guessExtension())
+                            ->setMime($file->getClientMimeType());
+                    }
+
+                    // Improve data with finfo
+                    if (null === $entity->getMime() && function_exists('finfo_open')) {
                         $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                        $args->setNewValue('mime', finfo_file($finfo, $file->getRealPath()));
+                        $entity->setMime(finfo_file($finfo, $file->getRealPath()));
                     }
                 }
             }

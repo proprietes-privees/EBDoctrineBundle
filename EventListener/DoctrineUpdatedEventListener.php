@@ -6,11 +6,11 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use EB\DoctrineBundle\Entity\UpdatedInterface;
 
 /**
- * Class DoctrineUpdatedListener
+ * Class DoctrineUpdatedEventListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class DoctrineUpdatedListener
+class DoctrineUpdatedEventListener
 {
     /**
      * @param PreUpdateEventArgs $args
@@ -19,7 +19,7 @@ class DoctrineUpdatedListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof UpdatedInterface) {
-            $args->setNewValue('updated', new \DateTime());
+            $entity->setUpdated(new \DateTime());
         }
     }
 }

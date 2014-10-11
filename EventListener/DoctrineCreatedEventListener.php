@@ -6,11 +6,11 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use EB\DoctrineBundle\Entity\CreatedInterface;
 
 /**
- * Class DoctrineCreatedListener
+ * Class DoctrineCreatedEventListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class DoctrineCreatedListener
+class DoctrineCreatedEventListener
 {
     /**
      * @param LifecycleEventArgs $args

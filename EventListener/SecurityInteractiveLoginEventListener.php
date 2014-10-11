@@ -7,11 +7,11 @@ use EB\DoctrineBundle\Entity\UserLoginInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
- * Class SecurityInteractiveLoginListener
+ * Class SecurityInteractiveLoginEventListener
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-class SecurityInteractiveLoginListener
+class SecurityInteractiveLoginEventListener
 {
     /**
      * @var EntityManager
@@ -27,8 +27,6 @@ class SecurityInteractiveLoginListener
     }
 
     /**
-     * Login
-     *
      * @param InteractiveLoginEvent $event
      */
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)

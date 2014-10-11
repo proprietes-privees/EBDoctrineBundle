@@ -5,22 +5,32 @@ Set of Doctrine listeners.
 ## Configuration
 
     eb_doctrine:
-
-        # Wether env is used in paths
-        useEnvDiscriminator:  true # Example: true
-
-        # Wether class is used in paths
-        useClassDiscriminator:  true # Example: true
-
-        # File tree depth
-        depth:                0 # Example: 5
-        path:
+        filesystem:
 
             # Web file path.
-            web:                  /files # Example: /files
+            web_path:             /files # Example: /files
 
             # Secured file path.
-            secured:              '%kernel.root_dir%/cache/%kernel.environment%/files' # Example: /var/my-data
+            secured_path:         '%kernel.root_dir%/cache/%kernel.environment%/files' # Example: /var/my-data
+
+            # Wether env is used in paths
+            use_env_discriminator:  true # Example: true
+
+            # Wether class is used in paths
+            use_class_discriminator:  true # Example: true
+
+            # File tree depth
+            depth:                0 # Example: 5
+        loggable:
+
+            # Persisted message or translation key.
+            persisted:            'L''élément %s a été créé avec succès !' # Example: L'élément %s a été créé avec succès !
+
+            # Updated message or translation key.
+            updated:              'L''élément %s a été modifié avec succès !' # Example: L'élément %s a été modifié avec succès !
+
+            # Removed message or translation key.
+            removed:              'L''élément %s a été supprimé avec succès !' # Example: L'élément %s a été supprimé avec succès !
 
 ## Usage
 
@@ -87,3 +97,7 @@ Set of Doctrine listeners.
   - Add all required fields and methods to create a user
   - Track current and previous login dates
   - Track password update date
+
+### Use Doctrine event to populate session flash bag messages
+
+  - Implement ``EB\DoctrineBundle\Entity\LoggableInterface``

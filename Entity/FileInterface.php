@@ -70,4 +70,9 @@ interface FileInterface
      * @return FileInterface
      */
     public function setMime($mime);
+
+    /**
+     * @return string
+     */
+    public function getMime();
 }
