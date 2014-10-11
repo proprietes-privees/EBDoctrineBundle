@@ -35,7 +35,10 @@ class DoctrineUserListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof UserInterface) {
-            $this->encodePassword($entity);
+            if (null !== $raw = $entity->getRawPassword()) {
+                $entity->setSalt($salt = $this->generateSalt());
+                $entity->setPassword($this->encoderFactory->getEncoder($entity)->encodePassword($raw, $salt));
+            }
         }
     }
 
@@ -46,26 +49,25 @@ class DoctrineUserListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof UserInterface) {
-            $this->encodePassword($entity);
+            if (null !== $raw = $entity->getRawPassword()) {
+                $args->setNewValue('salt', $salt = $this->generateSalt());
+                $args->setNewValue('password', $this->encoderFactory->getEncoder($entity)->encodePassword($raw, $salt));
 
-            $mdt = $args->getEntityManager()->getClassMetadata(get_class($entity));
-            $args->getEntityManager()->getUnitOfWork()->recomputeSingleEntityChangeSet($mdt, $entity);
+                // Track last password update
+                if ($entity instanceof UserPasswordDateInterface) {
+                    $args->setNewValue('passwordUpdated', new \DateTime());
+                }
+            }
         }
     }
 
     /**
-     * @param UserInterface $user
+     * Generate salt
+     *
+     * @return string
      */
-    private function encodePassword(UserInterface $user)
+    private function generateSalt()
     {
-        if (null !== $rawPassword = $user->getRawPassword()) {
-            $user->setSalt(hash('sha512', uniqid('encode', true) . time() . mt_rand(1, 999999999)));
-            $user->setPassword($this->encoderFactory->getEncoder($user)->encodePassword($rawPassword, $user->getSalt()));
-
-            // Track last password update
-            if ($user instanceof UserPasswordDateInterface) {
-                $user->setPasswordUpdated(new \DateTime());
-            }
-        }
+        return hash('sha512', uniqid('encode', true) . time() . mt_rand(1, 999999999));
     }
 }
