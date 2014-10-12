@@ -103,6 +103,10 @@ trait UserTrait
      */
     public function setRawPassword($rawPassword)
     {
+        // Fix to trigger doctrine event because rawPassword is not mapped
+        if (null !== $rawPassword) {
+            $this->setPassword(uniqid());
+        }
         $this->rawPassword = $rawPassword;
 
         return $this;
