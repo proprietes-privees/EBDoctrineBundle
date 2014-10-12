@@ -75,7 +75,9 @@ class DoctrineLoggableEventListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof LoggableInterface) {
-            $this->session->getFlashBag()->add('success', $this->createMessage($this->persistedMessage, $entity));
+            if ($this->session) {
+                $this->session->getFlashBag()->add('success', $this->createMessage($this->persistedMessage, $entity));
+            }
         }
     }
 
@@ -86,7 +88,9 @@ class DoctrineLoggableEventListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof LoggableInterface) {
-            $this->session->getFlashBag()->add('warning', $this->createMessage($this->updatedMessage, $entity));
+            if ($this->session) {
+                $this->session->getFlashBag()->add('warning', $this->createMessage($this->updatedMessage, $entity));
+            }
         }
     }
 
@@ -97,7 +101,9 @@ class DoctrineLoggableEventListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof LoggableInterface) {
-            $this->session->getFlashBag()->add('danger', $this->createMessage($this->removedMessage, $entity));
+            if ($this->session) {
+                $this->session->getFlashBag()->add('danger', $this->createMessage($this->removedMessage, $entity));
+            }
         }
     }
 
