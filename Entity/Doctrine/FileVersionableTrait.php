@@ -24,7 +24,7 @@ trait FileVersionableTrait
      */
     public function getVersion()
     {
-        return $this->getVersion();
+        return $this->version;
     }
 
     /**
