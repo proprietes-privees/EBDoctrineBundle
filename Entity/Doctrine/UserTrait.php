@@ -47,6 +47,14 @@ trait UserTrait
     }
 
     /**
+     * Erase credentials
+     */
+    public function eraseCredentials()
+    {
+        $this->setRawPassword(null);
+    }
+
+    /**
      * Set Username
      *
      * @param string $username
