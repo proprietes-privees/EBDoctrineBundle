@@ -18,10 +18,8 @@
     ],
     "require": {
         "php": ">=5.4",
-        "symfony/symfony": "*",
-        "doctrine/doctrine-bundle": "*",
-        "symfony/filesystem": "*",
-        "emmanuelballery/eb-stringbundle": "0.0.1"
+        "symfony/symfony": "~2.6",
+        "doctrine/doctrine-bundle": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
