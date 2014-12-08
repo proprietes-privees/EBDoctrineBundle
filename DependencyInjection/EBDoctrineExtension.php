@@ -2,6 +2,7 @@
 
 namespace EB\DoctrineBundle\DependencyInjection;
 
+use EB\DoctrineBundle\Converter\StringConverter;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -34,9 +35,17 @@ class EBDoctrineExtension extends Extension
         $container->setParameter('eb.doctrine_bundle.loggable.updated', $conf['loggable']['updated']);
         $container->setParameter('eb.doctrine_bundle.loggable.removed', $conf['loggable']['removed']);
 
+        // Just dump this in the cache file
+        $acc = StringConverter::getAcc();
+        $container->setParameter('eb.doctrine_bundle.converter.string_converter.acc', $acc);
+        $container->setParameter('eb.doctrine_bundle.converter.string_converter.accKeys', array_keys($acc));
+        $container->setParameter('eb.doctrine_bundle.converter.string_converter.accValues', array_values($acc));
+
         // Load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('converter.xml');
         $loader->load('event_listener.xml');
         $loader->load('paginator.xml');
+        $loader->load('twig.xml');
     }
 }

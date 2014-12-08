@@ -118,3 +118,91 @@ You can simply display those messages using Twig :
         </ul>
     {% endfor %}
 ```
+
+## From EBStringBundle
+
+This bundle helps me to deal with strings (for blog title in uri for example).
+
+### Controller
+
+``` php
+<?php
+// SomeController.php
+
+/** @var EB\StringBundle\String\StringService $string */
+$string = $this->get('eb_string');
+
+// Create a clean URI using an article title for example
+$string->uri('Lorem Ipsum Dolor Sit'); // "lorem-ipsum-dolor-sit"
+$string->uri('Lôrém Ïpsum Dõlor Sït'); // "lorem-ipsum-dolor-sit"
+$string->uri('Lorem_Ipsum_Dolor_Sit'); // "lorem_ipsum_dolor_sit"
+$string->uri('Lorem-Ipsum-Dolor-Sit'); // "lorem-ipsum-dolor-sit"
+$string->uri('Lorem.Ipsum.Dolor.Sit'); // "lorem.ipsum.dolor.sit"
+$string->uri('-Lorem Ipsum Dolor Sit'); // "lorem-ipsum-dolor-sit"
+$string->uri('Lorem Ipsum Dolor Sit-'); // "lorem-ipsum-dolor-sit"
+
+// Create a clean cut string
+$string->uri('LoremIpsumDolorSit',15); // "LoremIpsumDolor ..."
+$string->uri('Lorem Ipsum Dolor Sit',15); // "Lorem Ipsum ..."
+$string->uri('Lôrém Ïpsum Dõlor Sït',15); // "Lôrém Ïpsum ..."
+$string->uri('Lôrém Ïpsum Dõlor Sït',15,' (...)'); // "Lôrém Ïpsum (...)"
+
+// Help create a search index for your objects
+$string->search('Lorem Ipsum Dolor Sit'); // "lorem ipsum dolor sit"
+$string->search('Lôrém Ïpsum Dõlor Sït'); // "lorem ipsum dolor sit"
+$string->search('Lorem-Ipsum-Dolor-Sit'); // "lorem ipsum dolor sit"
+$string->search('Lorem Ipsum Dolor Sit Lorem'); // "lorem ipsum dolor sit"
+$string->search('Lorem Ipsum Dolor Si'); // "lorem ipsum dolor"
+
+// Camelize a string
+$string->camelize('Lorem Ipsum Dolor Sit'); // "loremIpsumDolorSit"
+$string->camelize('Lorem_Ipsum_Dolor_Sit'); // "loremIpsumDolorSit"
+$string->camelize('Lôrém Ïpsum Dõlor Sït'); // "loremIpsumDolorSit"
+$string->camelize('Lôrém_Ïpsum_Dõlor_Sït'); // "loremIpsumDolorSit"
+$string->camelize('loremIpsumDolorSit'); // "loremipsumdolorsit"
+
+// Underscore a string
+$string->underscore('Lorem Ipsum Dolor Sit'); // "lorem_ipsum_dolor_sit"
+$string->underscore('Lôrém Ïpsum Dõlor Sït'); // "lorem_ipsum_dolor_sit"
+$string->underscore('lorem_ipsum_dolor_sit'); // "lorem_ipsum_dolor_sit"
+```
+
+### Twig
+
+``` jinja
+{# SomeTemplate.html.twig #}
+
+{# Create a clean URI using an article title for example #}
+uri('Lorem Ipsum Dolor Sit') {# "lorem-ipsum-dolor-sit" #}
+uri('Lôrém Ïpsum Dõlor Sït') {# "lorem-ipsum-dolor-sit" #}
+uri('Lorem_Ipsum_Dolor_Sit') {# "lorem_ipsum_dolor_sit" #}
+uri('Lorem-Ipsum-Dolor-Sit') {# "lorem-ipsum-dolor-sit" #}
+uri('Lorem.Ipsum.Dolor.Sit') {# "lorem.ipsum.dolor.sit" #}
+uri('-Lorem Ipsum Dolor Sit') {# "lorem-ipsum-dolor-sit" #}
+uri('Lorem Ipsum Dolor Sit-') {# "lorem-ipsum-dolor-sit" #}
+
+{# Create a clean cut string #}
+cut('LoremIpsumDolorSit',15) {# "LoremIpsumDolor ..." #}
+cut('Lorem Ipsum Dolor Sit',15) {# "Lorem Ipsum ..." #}
+cut('Lôrém Ïpsum Dõlor Sït',15) {# "Lôrém Ïpsum ..." #}
+cut('Lôrém Ïpsum Dõlor Sït',15,' (...)') {# "Lôrém Ïpsum (...)" #}
+
+{# Help create a search index for your objects #}
+search('Lorem Ipsum Dolor Sit') {# "lorem ipsum dolor sit" #}
+search('Lôrém Ïpsum Dõlor Sït') {# "lorem ipsum dolor sit" #}
+search('Lorem-Ipsum-Dolor-Sit') {# "lorem ipsum dolor sit" #}
+search('Lorem Ipsum Dolor Sit Lorem') {# "lorem ipsum dolor sit" #}
+search('Lorem Ipsum Dolor Si') {# "lorem ipsum dolor" #}
+
+{# Camelize a string #}
+camelize('Lorem Ipsum Dolor Sit') {# "loremIpsumDolorSit" #}
+camelize('Lorem_Ipsum_Dolor_Sit') {# "loremIpsumDolorSit" #}
+camelize('Lôrém Ïpsum Dõlor Sït') {# "loremIpsumDolorSit" #}
+camelize('Lôrém_Ïpsum_Dõlor_Sït') {# "loremIpsumDolorSit" #}
+camelize('loremIpsumDolorSit') {# "loremipsumdolorsit" #}
+
+{# Underscrore a string #}
+underscore('Lorem Ipsum Dolor Sit') {# "lorem_ipsum_dolor_sit" #}
+underscore('Lôrém Ïpsum Dõlor Sït') {# "lorem_ipsum_dolor_sit" #}
+underscore('lorem_ipsum_dolor_sit') {# "lorem_ipsum_dolor_sit" #}
+````

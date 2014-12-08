@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="eb_string" alias="eb.doctrine_bundle.converter.string_converter"/>
+        <service id="eb.doctrine_bundle.converter.string_converter" class="EB\DoctrineBundle\Converter\StringConverter">
+            <argument>%eb.doctrine_bundle.converter.string_converter.acc%</argument>
+            <argument>%eb.doctrine_bundle.converter.string_converter.accKeys%</argument>
+            <argument>%eb.doctrine_bundle.converter.string_converter.accValues%</argument>
+        </service>
+    </services>
+</container>
