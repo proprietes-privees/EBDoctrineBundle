@@ -46,6 +46,7 @@ class EBDoctrineExtension extends Extension
         $loader->load('converter.xml');
         $loader->load('event_listener.xml');
         $loader->load('paginator.xml');
+        $loader->load('param_converter.xml');
         $loader->load('twig.xml');
     }
 }

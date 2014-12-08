@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="eb.doctrine_bundle.param_converter.secured_param_converter" class="EB\DoctrineBundle\ParamConverter\SecuredParamConverter">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="security.authorization_checker"/>
+            <tag name="request.param_converter" converter="secured.doctrine.orm" priority="10"/>
+        </service>
+    </services>
+</container>
