@@ -129,7 +129,7 @@ This bundle helps me to deal with strings (for blog title in uri for example).
 <?php
 // SomeController.php
 
-/** @var EB\StringBundle\String\StringService $string */
+/** @var EB\DoctrineBundle\Converter\StringConverter $string */
 $string = $this->get('eb_string');
 
 // Create a clean URI using an article title for example

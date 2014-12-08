@@ -5,7 +5,7 @@ namespace EB\DoctrineBundle\EventListener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use EB\DoctrineBundle\Entity\SlugInterface;
-use EB\StringBundle\String\StringService;
+use EB\DoctrineBundle\Converter\StringConverter;
 
 /**
  * Class DoctrineSlugEventListener
@@ -15,16 +15,16 @@ use EB\StringBundle\String\StringService;
 class DoctrineSlugEventListener
 {
     /**
-     * @var StringService
+     * @var StringConverter
      */
-    private $string;
+    private $stringConverter;
 
     /**
-     * @param StringService $string
+     * @param StringConverter $stringConverter
      */
-    public function __construct(StringService $string)
+    public function __construct(StringConverter $stringConverter)
     {
-        $this->string = $string;
+        $this->stringConverter = $stringConverter;
     }
 
     /**
@@ -34,7 +34,7 @@ class DoctrineSlugEventListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof SlugInterface) {
-            $entity->setSlug($this->string->slug($entity->getStringToSlug()));
+            $entity->setSlug($this->stringConverter->slug($entity->getStringToSlug()));
         }
     }
 
@@ -45,7 +45,7 @@ class DoctrineSlugEventListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof SlugInterface) {
-            $entity->setSlug($this->string->slug($entity->getStringToSlug()));
+            $entity->setSlug($this->stringConverter->slug($entity->getStringToSlug()));
         }
     }
 }
