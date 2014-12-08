@@ -3,18 +3,18 @@
 namespace EB\DoctrineBundle\Salt;
 
 /**
- * Trait SaltTrait
+ * Trait SaltGenerator
  *
  * @author "Emmanuel BALLERY" <emmanuel.ballery@gmail.com>
  */
-trait SaltTrait
+trait SaltGenerator
 {
     /**
      * Generate salt
      *
      * @return string
      */
-    protected function generateSalt()
+    public static function generateSalt()
     {
         return hash('sha512', uniqid('encode', true) . time() . mt_rand(1, 999999999));
     }

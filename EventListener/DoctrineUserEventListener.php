@@ -6,7 +6,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use EB\DoctrineBundle\Entity\UserInterface;
 use EB\DoctrineBundle\Entity\UserPasswordDateInterface;
-use EB\DoctrineBundle\Salt\SaltTrait;
+use EB\DoctrineBundle\Salt\SaltGenerator;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
@@ -16,8 +16,6 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
  */
 class DoctrineUserEventListener
 {
-    use SaltTrait;
-
     /**
      * @var EncoderFactoryInterface
      */
@@ -39,7 +37,7 @@ class DoctrineUserEventListener
         $entity = $args->getEntity();
         if ($entity instanceof UserInterface) {
             if (null !== $raw = $entity->getRawPassword()) {
-                $entity->setSalt($salt = $this->generateSalt());
+                $entity->setSalt($salt = SaltGenerator::generateSalt());
                 $entity->setPassword($this->encoderFactory->getEncoder($entity)->encodePassword($raw, $salt));
             }
         }
@@ -53,7 +51,7 @@ class DoctrineUserEventListener
         $entity = $args->getEntity();
         if ($entity instanceof UserInterface) {
             if (null !== $raw = $entity->getRawPassword()) {
-                $entity->setSalt($salt = $this->generateSalt());
+                $entity->setSalt($salt = SaltGenerator::generateSalt());
                 $entity->setPassword($this->encoderFactory->getEncoder($entity)->encodePassword($raw, $salt));
 
                 // Track last password update

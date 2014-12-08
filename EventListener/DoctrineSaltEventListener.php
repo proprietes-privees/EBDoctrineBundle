@@ -5,7 +5,7 @@ namespace EB\DoctrineBundle\EventListener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use EB\DoctrineBundle\Entity\SaltInterface;
-use EB\DoctrineBundle\Salt\SaltTrait;
+use EB\DoctrineBundle\Salt\SaltGenerator;
 
 /**
  * Class DoctrineSaltEventListener
@@ -14,8 +14,6 @@ use EB\DoctrineBundle\Salt\SaltTrait;
  */
 class DoctrineSaltEventListener
 {
-    use SaltTrait;
-
     /**
      * @param LifecycleEventArgs $args
      */
@@ -23,7 +21,7 @@ class DoctrineSaltEventListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof SaltInterface) {
-            $entity->setSalt($this->generateSalt());
+            $entity->setSalt(SaltGenerator::generateSalt());
         }
     }
 
@@ -34,7 +32,7 @@ class DoctrineSaltEventListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof SaltInterface) {
-            $entity->setSalt($this->generateSalt());
+            $entity->setSalt(SaltGenerator::generateSalt());
         }
     }
 }

@@ -60,7 +60,7 @@ Set of Doctrine tools.
   - Implement ``EB\DoctrineBundle\Entity\SaltInterface``
   - Use ``EB\DoctrineBundle\Entity\Doctrine\SaltTrait``
   - The salt will always be saved in the ``salt`` field
-  - Currently the salt is a sha512 hash (see ``EB\DoctrineBundle\Salt\SaltTrait``)
+  - Currently the salt is a sha512 hash (see ``EB\DoctrineBundle\Salt\SaltGenerator``)
 
 ### Save a file with an entity
 
