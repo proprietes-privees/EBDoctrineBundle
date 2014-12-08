@@ -186,8 +186,9 @@ trait FileTrait
     public function setFile(\SplFileInfo $file = null)
     {
         $this->file = $file;
-
-        $this->setUniqid(uniqid());
+        if (null !== $file) {
+            $this->setUniqid(uniqid());
+        }
 
         return $this;
     }
