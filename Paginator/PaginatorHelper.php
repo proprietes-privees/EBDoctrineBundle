@@ -17,12 +17,17 @@ class PaginatorHelper
     /**
      * @var null|int
      */
-    private $limit = 10;
+    private $page = null;
 
     /**
      * @var null|int
      */
-    private $page = null;
+    private $limit;
+
+    /**
+     * @var null|int
+     */
+    private $maxLimit;
 
     /**
      * @var null|int
@@ -37,7 +42,30 @@ class PaginatorHelper
     /**
      * @var string
      */
-    private $orderOrder = 'ASC';
+    private $orderOrder;
+
+    /**
+     * @var bool
+     */
+    private $useOutputWalker;
+
+    /**
+     * @param null|int    $limit           Limit
+     * @param null|int    $maxLimit        Max limit
+     * @param null|int    $offset          Offset
+     * @param null|string $orderBy         Order by
+     * @param null|string $orderOrder      Order order
+     * @param bool        $useOutputWalker Use output walker
+     */
+    public function __construct($limit = null, $maxLimit = null, $offset = null, $orderBy = null, $orderOrder = null, $useOutputWalker = false)
+    {
+        $this->limit = $limit;
+        $this->maxLimit = $maxLimit;
+        $this->offset = $offset;
+        $this->orderBy = $orderBy;
+        $this->orderOrder = $orderOrder;
+        $this->useOutputWalker = $useOutputWalker;
+    }
 
     /**
      * Create empty instance
@@ -63,7 +91,7 @@ class PaginatorHelper
      * @param array        $filters Filters
      * @param string       $key     QB Key
      *
-     * @return PaginatorHelper
+     * @return $this
      */
     public function applyEqFilter(QueryBuilder $qb, $name, array $filters = [], $key = 'a')
     {
@@ -84,7 +112,7 @@ class PaginatorHelper
      * @param array        $filters Filters
      * @param string       $key     QB Key
      *
-     * @return PaginatorHelper
+     * @return $this
      */
     public function applyLikeFilter(QueryBuilder $qb, $name, array $filters = [], $key = 'a')
     {
@@ -104,7 +132,7 @@ class PaginatorHelper
      * @param array        $filters Filters
      * @param string       $key     QB Key
      *
-     * @return PaginatorHelper
+     * @return $this
      */
     public function applyValidatedFilter(QueryBuilder $qb, array $filters = [], $key = 'a')
     {
@@ -159,32 +187,43 @@ class PaginatorHelper
     /**
      * Create a paginator
      *
-     * @param QueryBuilder $qb            Query builder
+     * @param QueryBuilder $qb
      * @param array        $defaultOrders Default orders
-     * @param string       $qbKey         Query builder key
+     * @param string       $key           Key
      *
      * @return Paginator
      */
-    public function create(QueryBuilder $qb, array $defaultOrders = [], $qbKey = 'a')
+    public function create(QueryBuilder $qb, $defaultOrders = [], $key = 'a')
     {
-        // Orders
-        if (null !== $orderBy = $this->getOrderBy()) {
-            $qb->addOrderBy(sprintf('%s.%s', $qbKey, $orderBy), $this->getOrderOrder());
-        }
-        foreach ($defaultOrders as $defaultOrderOrder => $defaultOrderBy) {
-            $qb->addOrderBy(sprintf('%s.%s', $qbKey, $defaultOrderOrder), $defaultOrderBy);
-        }
+        $paginator = new Paginator($this->decorate($qb, $defaultOrders, $key));
+        $paginator->setUseOutputWalkers($this->useOutputWalker);
 
-        // Pagination
+        return $paginator;
+    }
+
+    /**
+     * Decorate a query builder
+     *
+     * @param QueryBuilder $qb
+     * @param array        $defaultOrders Default orders
+     * @param string       $key           Key
+     *
+     * @return QueryBuilder
+     */
+    public function decorate(QueryBuilder $qb, $defaultOrders = [], $key = 'a')
+    {
         $qb
             ->setFirstResult($this->getOffset())
             ->setMaxResults($this->getLimit());
 
-        // Remove output walkers
-        $paginator = new Paginator($qb);
-        $paginator->setUseOutputWalkers(true);
+        if (null !== $this->getOrderBy() && null !== $this->getOrderOrder()) {
+            $qb->addOrderBy(sprintf('%s.%s', $key, $this->getOrderBy()), $this->getOrderOrder());
+        }
+        foreach ($defaultOrders as $order => $by) {
+            $qb->addOrderBy(sprintf('%s.%s', $key, $order), $by);
+        }
 
-        return $paginator;
+        return $qb;
     }
 
     /**
@@ -202,10 +241,14 @@ class PaginatorHelper
      *
      * @param int|null $limit Limit
      *
-     * @return PaginatorHelper
+     * @return $this
      */
     public function setLimit($limit)
     {
+        if (null !== $this->maxLimit && null !== $limit) {
+            $limit = min($limit, $this->maxLimit);
+        }
+
         $this->limit = $limit;
 
         return $this;
@@ -232,7 +275,7 @@ class PaginatorHelper
      *
      * @param int|null $offset Offset
      *
-     * @return PaginatorHelper
+     * @return $this
      */
     public function setOffset($offset)
     {
@@ -256,7 +299,7 @@ class PaginatorHelper
      *
      * @param null|string $orderBy OrderBy
      *
-     * @return PaginatorHelper
+     * @return $this
      */
     public function setOrderBy($orderBy)
     {
@@ -280,11 +323,12 @@ class PaginatorHelper
      *
      * @param string $orderOrder OrderOrder
      *
-     * @return PaginatorHelper
+     * @return $this
      */
     public function setOrderOrder($orderOrder)
     {
-        $this->orderOrder = $orderOrder;
+        $orderOrder = mb_strtolower($orderOrder);
+        $this->orderOrder = in_array($orderOrder, ['asc', 'desc']) ? $orderOrder : null;
 
         return $this;
     }
