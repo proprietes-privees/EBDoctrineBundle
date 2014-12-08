@@ -4,6 +4,9 @@
         <service id="eb.doctrine_bundle.event_listener.doctrine_created_event_listener" class="EB\DoctrineBundle\EventListener\DoctrineCreatedEventListener">
             <tag name="doctrine.event_listener" event="prePersist"/>
         </service>
+        <service id="eb.doctrine_bundle.event_listener.doctrine_deleted_event_listener" class="EB\DoctrineBundle\EventListener\DoctrineDeletedEventListener">
+            <tag name="doctrine.event_listener" event="onFlush"/>
+        </service>
         <service id="eb.doctrine_bundle.event_listener.doctrine_file_event_listener" class="EB\DoctrineBundle\EventListener\DoctrineFileEventListener">
             <argument id="filesystem" type="service"/>
             <argument>%kernel.root_dir%</argument>
