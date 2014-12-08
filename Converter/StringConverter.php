@@ -1,6 +1,7 @@
 <?php
 
 namespace EB\DoctrineBundle\Converter;
+use EB\DoctrineBundle\Entity\LoggableInterface;
 
 /**
  * Class StringConverter
@@ -206,5 +207,49 @@ class StringConverter
         $string = str_replace(' ', '_', $string);
 
         return trim($string);
+    }
+
+    /**
+     * Flatten
+     *
+     * @param mixed $value
+     *
+     * @return string
+     */
+    public function flatten($value)
+    {
+        if (is_null($value)) {
+            return 'null';
+        }
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+        if (is_scalar($value)) {
+            return $value;
+        }
+        if (is_array($value)) {
+            return json_encode($value);
+        }
+        if ($value instanceof \DateTime) {
+            return $value->format('d/m/Y H:i:s');
+        }
+        if ($value instanceof LoggableInterface) {
+            return (string) $value;
+        }
+        if (is_object($value)) {
+            if (method_exists($value, '__toString')) {
+                return (string) $value;
+            }
+            if (method_exists($value, 'getId')) {
+                return sprintf('%s[%u]', get_class($value), call_user_func([$value, 'getId']));
+            }
+            if ($value instanceof \Serializable) {
+                return serialize($value);
+            }
+
+            return get_class($value);
+        }
+
+        return '?';
     }
 }
