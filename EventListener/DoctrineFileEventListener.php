@@ -100,15 +100,17 @@ class DoctrineFileEventListener
         if ($entity instanceof FileInterface) {
             if (null !== $file = $entity->getFile()) {
                 if (null === $entity->getPath() || $entity->getPath() !== $file->getRealPath()) {
-                    $entity->setFilename($file->getFilename());
-                    $entity->setSize($file->getSize());
-                    $entity->setExtension($file->getExtension());
+                    $entity
+                        ->setFilename($file->getFilename())
+                        ->setSize($file->getSize())
+                        ->setExtension($file->getExtension());
 
-                    // Improve data with uploadedfile details
+                    // Improve data with uploaded file details
                     if ($file instanceof UploadedFile) {
-                        $entity->setFilename($file->getClientOriginalName());
-                        $entity->setExtension($file->guessExtension());
-                        $entity->setMime($file->getClientMimeType());
+                        $entity
+                            ->setFilename($file->getClientOriginalName())
+                            ->setExtension($file->guessExtension())
+                            ->setMime($file->getClientMimeType());
                     } elseif (function_exists('finfo_open')) {
                         $finfo = finfo_open(FILEINFO_MIME_TYPE);
                         $entity->setMime(finfo_file($finfo, $file->getRealPath()));
@@ -188,9 +190,8 @@ class DoctrineFileEventListener
                     // eg: /var/www/data/user for User entity
                     $class = null;
                     if ($this->useClassDiscriminator) {
-                        $class = str_replace('\\', $s, mb_strtolower(get_class($entity)));
-                        if (false !== $pos = mb_strrpos($class, $s)) {
-                            $class = mb_strcut($class, 1 + $pos);
+                        if (null === $class = $entity->getCacheKey()) {
+                            $class = '';
                         }
                     }
 
@@ -220,7 +221,7 @@ class DoctrineFileEventListener
                         true === $this->useEnvDiscriminator ? $this->env . $s : '',
                         null === $class ? '' : $class . $s,
                         $tree,
-                        $entity instanceof FileVersionableInterface ? '-' . $entity->getVersion() : '',
+                        $entity instanceof FileVersionableInterface ? sprintf('-%u', $entity->getVersion()) : '',
                         $entity->getExtension()
                     );
                     $this->logger->debug(__METHOD__ . ' : path = ' . $path);

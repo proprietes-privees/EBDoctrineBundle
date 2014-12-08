@@ -264,4 +264,19 @@ trait FileTrait
 
         return $this;
     }
+
+    /**
+     * Get cache key
+     *
+     * @return string
+     */
+    public function getCacheKey()
+    {
+        $class = get_class($this);
+        if (false !== $pos = mb_strrpos($class, '\\')) {
+            $class = mb_strcut($class, 1 + $pos);
+        }
+
+        return mb_strtolower($class);
+    }
 }
