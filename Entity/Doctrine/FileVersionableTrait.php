@@ -14,13 +14,16 @@ trait FileVersionableTrait
 {
     /**
      * @var int
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
+     * @Assert\NotNull()
      * @Assert\Type("int")
      */
-    private $version;
+    private $version = 0;
 
     /**
-     * {@inheritdoc}
+     * Get version
+     *
+     * @return int
      */
     public function getVersion()
     {
