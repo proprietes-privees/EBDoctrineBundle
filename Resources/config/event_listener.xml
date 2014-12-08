@@ -1,27 +1,17 @@
 <?xml version="1.0" ?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <parameters>
-        <parameter key="eb_doctrine.event_listener.doctrine_created_event_listener.class">EB\DoctrineBundle\EventListener\DoctrineCreatedEventListener</parameter>
-        <parameter key="eb_doctrine.event_listener.doctrine_file_event_listener.class">EB\DoctrineBundle\EventListener\DoctrineFileEventListener</parameter>
-        <parameter key="eb_doctrine.event_listener.doctrine_loggable_event_listener.class">EB\DoctrineBundle\EventListener\DoctrineLoggableEventListener</parameter>
-        <parameter key="eb_doctrine.event_listener.doctrine_salt_event_listener.class">EB\DoctrineBundle\EventListener\DoctrineSaltEventListener</parameter>
-        <parameter key="eb_doctrine.event_listener.doctrine_slug_event_listener.class">EB\DoctrineBundle\EventListener\DoctrineSlugEventListener</parameter>
-        <parameter key="eb_doctrine.event_listener.doctrine_updated_event_listener.class">EB\DoctrineBundle\EventListener\DoctrineUpdatedEventListener</parameter>
-        <parameter key="eb_doctrine.event_listener.doctrine_user_event_listener.class">EB\DoctrineBundle\EventListener\DoctrineUserEventListener</parameter>
-        <parameter key="eb_doctrine.event_listener.security_interactive_login_event_listener.class">EB\DoctrineBundle\EventListener\SecurityInteractiveLoginEventListener</parameter>
-    </parameters>
     <services>
-        <service id="eb_doctrine.event_listener.doctrine_created_event_listener" class="%eb_doctrine.event_listener.doctrine_created_event_listener.class%">
+        <service id="eb.doctrine_bundle.event_listener.doctrine_created_event_listener" class="EB\DoctrineBundle\EventListener\DoctrineCreatedEventListener">
             <tag name="doctrine.event_listener" event="prePersist"/>
         </service>
-        <service id="eb_doctrine.event_listener.doctrine_file_event_listener" class="%eb_doctrine.event_listener.doctrine_file_event_listener.class%">
+        <service id="eb.doctrine_bundle.event_listener.doctrine_file_event_listener" class="EB\DoctrineBundle\EventListener\DoctrineFileEventListener">
             <argument id="filesystem" type="service"/>
             <argument>%kernel.root_dir%</argument>
-            <argument>%eb_doctrine.filesystem.web_path%</argument>
-            <argument>%eb_doctrine.filesystem.secured_path%</argument>
-            <argument>%eb_doctrine.filesystem.use_env_discriminator%</argument>
-            <argument>%eb_doctrine.filesystem.use_class_discriminator%</argument>
-            <argument>%eb_doctrine.filesystem.depth%</argument>
+            <argument>%eb.doctrine_bundle.filesystem.web_path%</argument>
+            <argument>%eb.doctrine_bundle.filesystem.secured_path%</argument>
+            <argument>%eb.doctrine_bundle.filesystem.use_env_discriminator%</argument>
+            <argument>%eb.doctrine_bundle.filesystem.use_class_discriminator%</argument>
+            <argument>%eb.doctrine_bundle.filesystem.depth%</argument>
             <argument>%kernel.environment%</argument>
             <argument id="logger" type="service"/>
             <tag name="doctrine.event_listener" event="prePersist" priority="200"/>
@@ -30,34 +20,34 @@
             <tag name="doctrine.event_listener" event="postUpdate" priority="200"/>
             <tag name="doctrine.event_listener" event="preRemove" priority="200"/>
         </service>
-        <service id="eb_doctrine.event_listener.doctrine_loggable_event_listener" class="%eb_doctrine.event_listener.doctrine_loggable_event_listener.class%">
-            <argument>%eb_doctrine.loggable.persisted%</argument>
-            <argument>%eb_doctrine.loggable.updated%</argument>
-            <argument>%eb_doctrine.loggable.removed%</argument>
+        <service id="eb.doctrine_bundle.event_listener.doctrine_loggable_event_listener" class="EB\DoctrineBundle\EventListener\DoctrineLoggableEventListener">
+            <argument>%eb.doctrine_bundle.loggable.persisted%</argument>
+            <argument>%eb.doctrine_bundle.loggable.updated%</argument>
+            <argument>%eb.doctrine_bundle.loggable.removed%</argument>
             <argument type="service" id="translator" on-invalid="null"/>
             <tag name="kernel.event_listener" event="kernel.request"/>
             <tag name="doctrine.event_listener" event="postPersist"/>
             <tag name="doctrine.event_listener" event="postUpdate"/>
             <tag name="doctrine.event_listener" event="postRemove"/>
         </service>
-        <service id="eb_doctrine.event_listener.doctrine_salt_event_listener" class="%eb_doctrine.event_listener.doctrine_salt_event_listener.class%">
+        <service id="eb.doctrine_bundle.event_listener.doctrine_salt_event_listener" class="EB\DoctrineBundle\EventListener\DoctrineSaltEventListener">
             <tag name="doctrine.event_listener" event="prePersist" priority="30"/>
             <tag name="doctrine.event_listener" event="preUpdate" priority="30"/>
         </service>
-        <service id="eb_doctrine.event_listener.doctrine_slug_event_listener" class="%eb_doctrine.event_listener.doctrine_slug_event_listener.class%">
+        <service id="eb.doctrine_bundle.event_listener.doctrine_slug_event_listener" class="EB\DoctrineBundle\EventListener\DoctrineSlugEventListener">
             <argument id="eb_string" type="service"/>
             <tag name="doctrine.event_listener" event="prePersist"/>
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
-        <service id="eb_doctrine.event_listener.doctrine_updated_event_listener" class="%eb_doctrine.event_listener.doctrine_updated_event_listener.class%">
+        <service id="eb.doctrine_bundle.event_listener.doctrine_updated_event_listener" class="EB\DoctrineBundle\EventListener\DoctrineUpdatedEventListener">
             <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
-        <service id="eb_doctrine.event_listener.doctrine_user_event_listener" class="%eb_doctrine.event_listener.doctrine_user_event_listener.class%">
+        <service id="eb.doctrine_bundle.event_listener.doctrine_user_event_listener" class="EB\DoctrineBundle\EventListener\DoctrineUserEventListener">
             <argument id="security.encoder_factory" type="service"/>
             <tag name="doctrine.event_listener" event="prePersist" priority="20"/>
             <tag name="doctrine.event_listener" event="preUpdate" priority="20"/>
         </service>
-        <service id="eb_doctrine.event_listener.security_interactive_login_event_listener" class="%eb_doctrine.event_listener.security_interactive_login_event_listener.class%">
+        <service id="eb.doctrine_bundle.event_listener.security_interactive_login_event_listener" class="EB\DoctrineBundle\EventListener\SecurityInteractiveLoginEventListener">
             <argument id="doctrine.orm.entity_manager" type="service"/>
             <tag name="kernel.event_listener" event="security.interactive_login"/>
         </service>

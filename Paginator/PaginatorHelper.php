@@ -48,7 +48,11 @@ class PaginatorHelper
     {
         $helper = new self();
 
-        return $helper->setLimit(null)->setOffset(null)->setOrderBy(null)->setOrderOrder(null);
+        return $helper
+            ->setLimit(null)
+            ->setOffset(null)
+            ->setOrderBy(null)
+            ->setOrderOrder(null);
     }
 
     /**
@@ -63,10 +67,10 @@ class PaginatorHelper
      */
     public function applyEqFilter(QueryBuilder $qb, $name, array $filters = [], $key = 'a')
     {
-        if (array_key_exists($name, $filters) && null !== $filters[$name]) {
+        if (null !== $value = $this->getFilterArgument($name, $filters)) {
             $qb
                 ->andWhere($qb->expr()->eq(sprintf('%s.%s', $key, $name), sprintf(':%s', $name)))
-                ->setParameter($name, $filters[$name]);
+                ->setParameter($name, $value);
         }
 
         return $this;
@@ -84,10 +88,10 @@ class PaginatorHelper
      */
     public function applyLikeFilter(QueryBuilder $qb, $name, array $filters = [], $key = 'a')
     {
-        if (array_key_exists($name, $filters) && null !== $filters[$name]) {
+        if (null !== $value = $this->getFilterArgument($name, $filters)) {
             $qb
                 ->andWhere($qb->expr()->like(sprintf('%s.%s', $key, $name), sprintf(':%s', $name)))
-                ->setParameter($name, sprintf('%%%s%%', $filters[$name]));
+                ->setParameter($name, sprintf('%%%s%%', $value));
         }
 
         return $this;
@@ -105,12 +109,14 @@ class PaginatorHelper
     public function applyValidatedFilter(QueryBuilder $qb, array $filters = [], $key = 'a')
     {
         // Not validated
-        if (array_key_exists('not_validated', $filters) && is_bool($notValidated = $filters['not_validated'])) {
-            if (true === $notValidated) {
+        if (null !== $value = $this->getFilterArgument('not_validated', $filters)) {
+            if (true === $value) {
                 $qb
                     ->andWhere($qb->expr()->isNull(sprintf('%s.validated', $key)))
                     ->andWhere($qb->expr()->isNull(sprintf('%s.invalidated', $key)));
-            } else {
+            }
+
+            if (false === $value) {
                 $qb
                     ->andWhere($qb->expr()->orX(
                         $qb->expr()->isNotNull(sprintf('%s.validated', $key)),
@@ -120,15 +126,34 @@ class PaginatorHelper
         }
 
         // Valid
-        if (array_key_exists('valid', $filters) && is_bool($valid = $filters['valid'])) {
-            if (true === $valid) {
+        if (null !== $value = $this->getFilterArgument('valid', $filters)) {
+            if (true === $value) {
                 $qb->andWhere($qb->expr()->isNotNull(sprintf('%s.validated', $key)));
-            } else {
+            }
+
+            if (false === $value) {
                 $qb->andWhere($qb->expr()->isNotNull(sprintf('%s.invalidated', $key)));
             }
         }
 
         return $this;
+    }
+
+    /**
+     * Get filter argument
+     *
+     * @param string $key     Query builder key
+     * @param array  $filters Filters
+     *
+     * @return null|mixed
+     */
+    public function getFilterArgument($key, array $filters = [])
+    {
+        if (array_key_exists($key, $filters)) {
+            return $filters[$key];
+        }
+
+        return null;
     }
 
     /**

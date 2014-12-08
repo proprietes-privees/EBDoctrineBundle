@@ -1,6 +1,6 @@
 # EBDoctrineBundle
 
-Set of Doctrine listeners.
+Set of Doctrine tools.
 
 ## Configuration
 
@@ -67,7 +67,7 @@ Set of Doctrine listeners.
   - Implement one of these interfaces :
     - ``EB\DoctrineBundle\Entity\FileInterface`` (if you don't want a direct access via your webserver)
     - ``EB\DoctrineBundle\Entity\FileReadableInterface`` (stored in your web folder, add an URI path)
-    - ``EB\DoctrineBundle\Entity\FileVersionableInterface`` (track file version)
+    - ``EB\DoctrineBundle\Entity\FileVersionableInterface`` (track different file versions)
   - Use those traits :
     - ``EB\DoctrineBundle\Entity\Doctrine\FileTrait``
     - ``EB\DoctrineBundle\Entity\Doctrine\FileReadableTrait``
