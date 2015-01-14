@@ -29,7 +29,7 @@
                     <ul class="pagination pagination-sm">
                         {# Display previous page #}
                         {% if page > 1 %}
-                            <li><a href="{{ path(route,parameters|merge({page:page-1})) }}">{{ icon('arrow-left') }}</a></li>
+                            <li><a href="{{ path(route,parameters|merge({page:page-1})) }}"><span class="fa fa-arrow-left"></span></a></li>
                         {% endif %}
 
                         {# Display each page #}
@@ -57,7 +57,7 @@
 
                         {# Display next page #}
                         {% if page < max %}
-                            <li><a href="{{ path(route,parameters|merge({page:page+1})) }}">{{ icon('arrow-right') }}</a></li>
+                            <li><a href="{{ path(route,parameters|merge({page:page+1})) }}"><span class="fa fa-arrow-right"></span></a></li>
                         {% endif %}
                     </ul>
                 </div>
