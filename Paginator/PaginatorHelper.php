@@ -17,7 +17,7 @@ class PaginatorHelper
     /**
      * @var null|int
      */
-    private $page = null;
+    private $page;
 
     /**
      * @var null|int
