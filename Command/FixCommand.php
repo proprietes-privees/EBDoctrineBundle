@@ -40,7 +40,7 @@ class FixCommand extends ContainerAwareCommand
             $ref = $metadata->getReflectionClass();
 
             // Fix slugs
-            if ($ref->implementsInterface('EB\DoctrineBundle\Entity\SlugInterface')) {
+            if ($ref->implementsInterface(SlugInterface::class)) {
                 /** @var SlugInterface[] $entities */
                 $entities = $em->getRepository($metadata->getName())->findAll();
                 foreach ($entities as $entity) {
@@ -55,7 +55,7 @@ class FixCommand extends ContainerAwareCommand
             }
 
             // Fix md5
-            if ($ref->implementsInterface('EB\DoctrineBundle\Entity\FileInterface')) {
+            if ($ref->implementsInterface(FileInterface::class)) {
                 /** @var FileInterface[] $entities */
                 $entities = $em->getRepository($metadata->getName())->findAll();
                 foreach ($entities as $entity) {
