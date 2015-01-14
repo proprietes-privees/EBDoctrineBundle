@@ -274,8 +274,12 @@ class DoctrineFileEventListener
                         $this->logger->debug(__METHOD__ . ' : saved');
                     } catch (IOException $e) {
                         $this->logger->error(__METHOD__ . ' filesystem error : ' . $e->getMessage());
+
+                        throw $e;
                     } catch (\Exception $e) {
                         $this->logger->error(__METHOD__ . ' : ' . $e->getMessage());
+
+                        throw $e;
                     }
                 }
             }
