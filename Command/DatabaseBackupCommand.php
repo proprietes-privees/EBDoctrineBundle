@@ -49,7 +49,7 @@ class DatabaseBackupCommand extends ContainerAwareCommand
         // Find doctrine configuration
         $co = $this->getContainer()->get('doctrine.orm.default_entity_manager')->getConnection();
 
-        // Execute backup
+        // Prepare backup command
         $backup = new Process(sprintf(
             '%s -h "%s" -P "%s" -u "%s"%s "%s" > "%s"',
             $mysqldump,
@@ -60,7 +60,9 @@ class DatabaseBackupCommand extends ContainerAwareCommand
             $co->getDatabase(),
             $backupFile = sprintf('%s/%s.sql', $path, date('Ymd-His'))
         ));
+        $backup->setTimeout(null);
 
+        // Execute backup
         $code = $backup->run();
         if ($backup->isSuccessful()) {
             $output->writeln(sprintf('<info>%s</info>', $backupFile));
