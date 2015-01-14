@@ -1,6 +1,6 @@
 <?php
 
-namespace EB\StringBundle\Twig\Extension;
+namespace EB\DoctrineBundle\Twig\Extension;
 
 use EB\DoctrineBundle\Converter\StringConverter;
 
