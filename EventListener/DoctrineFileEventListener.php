@@ -105,6 +105,13 @@ class DoctrineFileEventListener
                         ->setSize($file->getSize())
                         ->setExtension($file->getExtension());
 
+                    // MD5
+                    if (file_exists($file->getRealPath()) && is_readable($file->getRealPath())) {
+                        if (false !== $md5 = md5_file($file->getRealPath())) {
+                            $entity->setMd5($md5);
+                        }
+                    }
+
                     // Improve data with uploaded file details
                     if ($file instanceof UploadedFile) {
                         $entity
@@ -136,6 +143,13 @@ class DoctrineFileEventListener
                         ->setFilename($file->getFilename())
                         ->setSize($file->getSize())
                         ->setExtension($file->getExtension());
+
+                    // MD5
+                    if (file_exists($file->getRealPath()) && is_readable($file->getRealPath())) {
+                        if (false !== $md5 = md5_file($file->getRealPath())) {
+                            $entity->setMd5($md5);
+                        }
+                    }
 
                     // Improve data with uploaded file details
                     if ($file instanceof UploadedFile) {

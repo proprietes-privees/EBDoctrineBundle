@@ -65,33 +65,31 @@ trait FileTrait
     private $uniqid;
 
     /**
+     * @var null|string
+     * @ORM\Column(type="string", length=32, nullable=true)
+     * @Assert\Length(max=32)
+     */
+    private $md5;
+
+    /**
      * @var null|\SplFileInfo
      * @Assert\File()
      */
     private $file;
 
     /**
-     * Get Filename
+     * Get cache key
      *
      * @return string
      */
-    public function getFilename()
+    public function getCacheKey()
     {
-        return $this->filename;
-    }
+        $class = get_class($this);
+        if (false !== $pos = mb_strrpos($class, '\\')) {
+            $class = mb_strcut($class, 1 + $pos);
+        }
 
-    /**
-     * Set Filename
-     *
-     * @param string $filename
-     *
-     * @return $this
-     */
-    public function setFilename($filename)
-    {
-        $this->filename = $filename;
-
-        return $this;
+        return mb_strtolower($class);
     }
 
     /**
@@ -114,6 +112,57 @@ trait FileTrait
     public function setExtension($extension)
     {
         $this->extension = $extension;
+
+        return $this;
+    }
+
+    /**
+     * Get File
+     *
+     * @return null|\SplFileInfo
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * Set File
+     *
+     * @param null|\SplFileInfo $file
+     *
+     * @return $this
+     */
+    public function setFile(\SplFileInfo $file = null)
+    {
+        $this->file = $file;
+        if (null !== $file) {
+            $this->setUniqid(uniqid());
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get Filename
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * Set Filename
+     *
+     * @param string $filename
+     *
+     * @return $this
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
 
         return $this;
     }
@@ -143,6 +192,30 @@ trait FileTrait
     }
 
     /**
+     * Get Path
+     *
+     * @return null|string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Set Path
+     *
+     * @param null|string $path
+     *
+     * @return $this
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
      * Get Size
      *
      * @return int
@@ -162,33 +235,6 @@ trait FileTrait
     public function setSize($size)
     {
         $this->size = $size;
-
-        return $this;
-    }
-
-    /**
-     * Get File
-     *
-     * @return null|\SplFileInfo
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    /**
-     * Set File
-     *
-     * @param null|\SplFileInfo $file
-     *
-     * @return $this
-     */
-    public function setFile(\SplFileInfo $file = null)
-    {
-        $this->file = $file;
-        if (null !== $file) {
-            $this->setUniqid(uniqid());
-        }
 
         return $this;
     }
@@ -242,41 +288,26 @@ trait FileTrait
     }
 
     /**
-     * Get Path
+     * Get Md5
      *
      * @return null|string
      */
-    public function getPath()
+    public function getMd5()
     {
-        return $this->path;
+        return $this->md5;
     }
 
     /**
-     * Set Path
+     * Set Md5
      *
-     * @param null|string $path
+     * @param null|string $md5 Md5
      *
      * @return $this
      */
-    public function setPath($path)
+    public function setMd5($md5 = null)
     {
-        $this->path = $path;
+        $this->md5 = $md5;
 
         return $this;
-    }
-
-    /**
-     * Get cache key
-     *
-     * @return string
-     */
-    public function getCacheKey()
-    {
-        $class = get_class($this);
-        if (false !== $pos = mb_strrpos($class, '\\')) {
-            $class = mb_strcut($class, 1 + $pos);
-        }
-
-        return mb_strtolower($class);
     }
 }

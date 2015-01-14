@@ -3,6 +3,7 @@
 namespace EB\DoctrineBundle\Command;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use EB\DoctrineBundle\Entity\FileInterface;
 use EB\DoctrineBundle\Entity\SlugInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -44,12 +45,34 @@ class FixCommand extends ContainerAwareCommand
                 $entities = $em->getRepository($metadata->getName())->findAll();
                 foreach ($entities as $entity) {
                     $slug = $stringService->slug($entity->getStringToSlug());
-                    if($slug === $entity->getSlug()) {
+                    if ($slug === $entity->getSlug()) {
                         $output->writeln(sprintf('<info>Slug valid for %s</info> : %s', $entity, $slug));
-                    }else{
+                    } else {
                         $output->writeln(sprintf('<error>Fixing slug for %s</error> : %s', $entity, $slug));
                     }
                     $entity->setSlug($slug);
+                }
+            }
+
+            // Fix md5
+            if ($ref->implementsInterface('EB\DoctrineBundle\Entity\FileInterface')) {
+                /** @var FileInterface[] $entities */
+                $entities = $em->getRepository($metadata->getName())->findAll();
+                foreach ($entities as $entity) {
+                    if (null !== $path = $entity->getPath()) {
+                        if (file_exists($path) && is_readable($path)) {
+                            if (false !== $md5 = md5_file($path)) {
+                                $entity->setMd5($md5);
+                                $output->writeln(sprintf('<info>%s[[%u]] MD5 set for "%s"</info>', get_class($entity), $entity->getId(), $path));
+                            } else {
+                                $output->writeln(sprintf('<error>%s[[%u]] MD5 cannot be found for "%s"</error>', get_class($entity), $entity->getId(), $path));
+                            }
+                        } else {
+                            $output->writeln(sprintf('<error>%s[%u] "%s" does not exist</error>', get_class($entity), $entity->getId(), $path));
+                        }
+                    } else {
+                        $output->writeln(sprintf('<error>No path found found %s[%u]</error>', get_class($entity), $entity->getId()));
+                    }
                 }
             }
         }

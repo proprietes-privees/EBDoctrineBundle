@@ -119,4 +119,16 @@ interface FileInterface
      * @return null|string
      */
     public function getCacheKey();
+
+    /**
+     * @return null|string
+     */
+    public function getMd5();
+
+    /**
+     * @param null|string $md5
+     *
+     * @return FileInterface
+     */
+    public function setMd5($md5 = null);
 }
