@@ -27,6 +27,11 @@ class PaginatorHelper
     /**
      * @var null|int
      */
+    private $defaultLimit;
+
+    /**
+     * @var null|int
+     */
     private $maxLimit;
 
     /**
@@ -50,20 +55,14 @@ class PaginatorHelper
     private $useOutputWalker;
 
     /**
-     * @param null|int    $limit           Limit
-     * @param null|int    $maxLimit        Max limit
-     * @param null|int    $offset          Offset
-     * @param null|string $orderBy         Order by
-     * @param null|string $orderOrder      Order order
-     * @param bool        $useOutputWalker Use output walker
+     * @param null|int $defaultLimit    Default limit
+     * @param null|int $maxLimit        Max limit
+     * @param bool     $useOutputWalker Use output walker
      */
-    public function __construct($limit = null, $maxLimit = null, $offset = null, $orderBy = null, $orderOrder = null, $useOutputWalker = false)
+    public function __construct($defaultLimit = null, $maxLimit = null, $useOutputWalker = false)
     {
-        $this->limit = $limit;
+        $this->defaultLimit = $defaultLimit;
         $this->maxLimit = $maxLimit;
-        $this->offset = $offset;
-        $this->orderBy = $orderBy;
-        $this->orderOrder = $orderOrder;
         $this->useOutputWalker = $useOutputWalker;
     }
 
@@ -233,6 +232,10 @@ class PaginatorHelper
      */
     public function getLimit()
     {
+        if (null === $this->limit) {
+            return $this->defaultLimit;
+        }
+
         return $this->limit;
     }
 
@@ -370,5 +373,77 @@ class PaginatorHelper
                 $request->query->remove('order_order');
             }
         }
+    }
+
+    /**
+     * Get DefaultLimit
+     *
+     * @return null|int
+     */
+    public function getDefaultLimit()
+    {
+        return $this->defaultLimit;
+    }
+
+    /**
+     * Set DefaultLimit
+     *
+     * @param null|int $defaultLimit
+     *
+     * @return PaginatorHelper
+     */
+    public function setDefaultLimit($defaultLimit)
+    {
+        $this->defaultLimit = $defaultLimit;
+
+        return $this;
+    }
+
+    /**
+     * Get MaxLimit
+     *
+     * @return null|int
+     */
+    public function getMaxLimit()
+    {
+        return $this->maxLimit;
+    }
+
+    /**
+     * Set MaxLimit
+     *
+     * @param null|int $maxLimit
+     *
+     * @return PaginatorHelper
+     */
+    public function setMaxLimit($maxLimit = null)
+    {
+        $this->maxLimit = $maxLimit;
+
+        return $this;
+    }
+
+    /**
+     * Get UseOutputWalker
+     *
+     * @return bool
+     */
+    public function getUseOutputWalker()
+    {
+        return $this->useOutputWalker;
+    }
+
+    /**
+     * Set UseOutputWalker
+     *
+     * @param bool $useOutputWalker
+     *
+     * @return PaginatorHelper
+     */
+    public function setUseOutputWalker($useOutputWalker)
+    {
+        $this->useOutputWalker = $useOutputWalker;
+
+        return $this;
     }
 }

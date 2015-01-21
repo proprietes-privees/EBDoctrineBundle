@@ -35,6 +35,11 @@ class EBDoctrineExtension extends Extension
         $container->setParameter('eb.doctrine_bundle.loggable.updated', $conf['loggable']['updated']);
         $container->setParameter('eb.doctrine_bundle.loggable.removed', $conf['loggable']['removed']);
 
+        // Paginator
+        $container->setParameter('eb.doctrine_bundle.paginator.default_limit', $conf['paginator']['default_limit']);
+        $container->setParameter('eb.doctrine_bundle.paginator.max_limit', $conf['paginator']['max_limit']);
+        $container->setParameter('eb.doctrine_bundle.paginator.use_output_walker', $conf['paginator']['use_output_walker']);
+
         // Just dump this in the cache file
         $acc = StringConverter::getAcc();
         $container->setParameter('eb.doctrine_bundle.converter.string_converter.acc', $acc);

@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
 
         $this->addFilesystemConfiguration($ch);
         $this->addLoggableConfiguration($ch);
+        $this->addPaginatorConfiguration($ch);
 
         return $tb;
     }
@@ -53,5 +54,18 @@ class Configuration implements ConfigurationInterface
         $loggable->scalarNode('persisted')->defaultValue('L\'élément %%entity%% a été créé avec succès !')->info('Persisted message or translation key.')->example('L\'élément %%entity%% a été créé avec succès !');
         $loggable->scalarNode('updated')->defaultValue('L\'élément %%entity%% a été modifié avec succès !')->info('Updated message or translation key.')->example('L\'élément %%entity%% a été modifié avec succès !');
         $loggable->scalarNode('removed')->defaultValue('L\'élément %%entity%% a été supprimé avec succès !')->info('Removed message or translation key.')->example('L\'élément %%entity%% a été supprimé avec succès !');
+    }
+
+    /**
+     * Add paginator configuration
+     *
+     * @param NodeBuilder $node
+     */
+    private function addPaginatorConfiguration(NodeBuilder $node)
+    {
+        $paginator = $node->arrayNode('paginator')->addDefaultsIfNotSet()->children();
+        $paginator->integerNode('default_limit')->defaultNull()->info('Default paginator limit')->example('10');
+        $paginator->integerNode('max_limit')->defaultNull()->info('Maximum paginator limit')->example('100');
+        $paginator->booleanNode('use_output_walker')->defaultFalse()->info('Wether we have to use the output walker')->example('false');
     }
 }
