@@ -4,33 +4,46 @@ Set of Doctrine tools.
 
 ## Configuration
 
-    eb_doctrine:
-        filesystem:
+```
+# Default configuration for "EBDoctrineBundle"
+eb_doctrine:
+    filesystem:
 
-            # Web file path.
-            web_path:             /files # Example: /files
+        # Web file path.
+        web_path:             /files # Example: /files
 
-            # Secured file path.
-            secured_path:         '%kernel.root_dir%/cache/%kernel.environment%/files' # Example: /var/my-data
+        # Secured file path.
+        secured_path:         '%kernel.root_dir%/cache/%kernel.environment%/files' # Example: /var/my-data
 
-            # Wether env is used in paths
-            use_env_discriminator:  true # Example: true
+        # Wether env is used in paths
+        use_env_discriminator:  true # Example: true
 
-            # Wether class is used in paths
-            use_class_discriminator:  true # Example: true
+        # Wether class is used in paths
+        use_class_discriminator:  true # Example: true
 
-            # File tree depth
-            depth:                0 # Example: 5
-        loggable:
+        # File tree depth
+        depth:                0 # Example: 5
+    loggable:
 
-            # Persisted message or translation key.
-            persisted:            'L''élément %s a été créé avec succès !' # Example: L'élément %s a été créé avec succès !
+        # Persisted message or translation key.
+        persisted:            'L''élément %%entity%% a été créé avec succès !' # Example: L'élément %%entity%% a été créé avec succès !
 
-            # Updated message or translation key.
-            updated:              'L''élément %s a été modifié avec succès !' # Example: L'élément %s a été modifié avec succès !
+        # Updated message or translation key.
+        updated:              'L''élément %%entity%% a été modifié avec succès !' # Example: L'élément %%entity%% a été modifié avec succès !
 
-            # Removed message or translation key.
-            removed:              'L''élément %s a été supprimé avec succès !' # Example: L'élément %s a été supprimé avec succès !
+        # Removed message or translation key.
+        removed:              'L''élément %%entity%% a été supprimé avec succès !' # Example: L'élément %%entity%% a été supprimé avec succès !
+    paginator:
+
+        # Default paginator limit
+        default_limit:        null # Example: 10
+
+        # Maximum paginator limit
+        max_limit:            null # Example: 100
+
+        # Wether we have to use the output walker
+        use_output_walker:    false # Example: false
+```
 
 ## Usage
 
