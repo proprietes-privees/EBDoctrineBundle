@@ -297,7 +297,9 @@ class DoctrineFileEventListener
         $entity = $args->getEntity();
         if ($entity instanceof FileInterface) {
             if (null !== $path = $entity->getPath()) {
-                $this->fs->remove($path);
+                if (is_file($path)) {
+                    $this->fs->remove($path);
+                }
             }
         }
     }
