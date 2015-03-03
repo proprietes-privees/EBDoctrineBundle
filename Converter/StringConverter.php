@@ -258,4 +258,16 @@ class StringConverter
 
         return trim($string, '-');
     }
+
+    /**
+     * Remove accents
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public function removeAccents($string)
+    {
+        return str_replace($this->accKeys, $this->accValues, $string);
+    }
 }
