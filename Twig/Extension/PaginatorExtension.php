@@ -91,7 +91,7 @@ class PaginatorExtension extends \Twig_Extension
         }
 
         $current = $id === $this->paginatorHelper->getOrderBy();
-        $defaultOrder = mb_strtoupper($defaultOrder);
+        $defaultOrder = $defaultOrder ? mb_strtoupper($defaultOrder) : null;
         $order = $current ? ('ASC' === $this->paginatorHelper->getOrderOrder() ? 'DESC' : 'ASC') : 'ASC';
         if (null === $this->paginatorHelper->getOrderBy()) {
             if (null !== $defaultOrder) {
