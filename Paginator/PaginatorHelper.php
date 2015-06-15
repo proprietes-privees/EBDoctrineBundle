@@ -215,8 +215,9 @@ class PaginatorHelper
             ->setFirstResult($this->getOffset())
             ->setMaxResults($this->getLimit());
 
-        if (null !== $this->getOrderBy() && null !== $this->getOrderOrder()) {
-            $qb->addOrderBy(sprintf('%s.%s', $key, $this->getOrderBy()), $this->getOrderOrder());
+        if (null !== $this->getOrderBy()) {
+            $order = $this->getOrderOrder() ?: 'ASC';
+            $qb->addOrderBy(sprintf('%s.%s', $key, $this->getOrderBy()), $order);
         }
         foreach ($defaultOrders as $order => $by) {
             $qb->addOrderBy(sprintf('%s.%s', $key, $order), $by);
@@ -369,7 +370,7 @@ class PaginatorHelper
                 $request->query->remove('order_by');
             }
             if ($request->query->has('order_order')) {
-                $this->setOrderBy($request->query->get('order_order'));
+                $this->setOrderOrder($request->query->get('order_order'));
                 $request->query->remove('order_order');
             }
         }
