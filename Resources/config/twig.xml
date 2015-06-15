@@ -8,5 +8,12 @@
             <argument type="service" id="eb_string"/>
             <tag name="twig.extension"/>
         </service>
+        <service id="eb.doctrine_bundle.twig.extension.paginator_extension" class="EB\DoctrineBundle\Twig\Extension\PaginatorExtension">
+            <argument>eb.doctrine_bundle.twig.extension.paginator_extension</argument>
+            <argument type="service" id="router"/>
+            <argument type="service" id="eb_paginator_helper"/>
+            <tag name="kernel.event_listener" event="kernel.request"/>
+            <tag name="twig.extension"/>
+        </service>
     </services>
 </container>

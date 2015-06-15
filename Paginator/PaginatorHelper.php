@@ -331,8 +331,7 @@ class PaginatorHelper
      */
     public function setOrderOrder($orderOrder)
     {
-        $orderOrder = mb_strtolower($orderOrder);
-        $this->orderOrder = in_array($orderOrder, ['asc', 'desc']) ? $orderOrder : null;
+        $this->orderOrder = in_array($orderOrder, ['ASC', 'DESC']) ? $orderOrder : null;
 
         return $this;
     }
@@ -370,7 +369,7 @@ class PaginatorHelper
                 $request->query->remove('order_by');
             }
             if ($request->query->has('order_order')) {
-                $this->setOrderOrder($request->query->get('order_order'));
+                $this->setOrderOrder(mb_strtoupper($request->query->get('order_order')));
                 $request->query->remove('order_order');
             }
         }
