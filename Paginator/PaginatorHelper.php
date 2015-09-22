@@ -345,6 +345,7 @@ class PaginatorHelper
     {
         if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
             $request = $event->getRequest();
+            $backupQuery = [];
 
             // Limit
             if ($request->query->has('limit')) {
@@ -366,12 +367,16 @@ class PaginatorHelper
             // Orders
             if ($request->query->has('order_by')) {
                 $this->setOrderBy($request->query->get('order_by'));
+                $backupQuery['order_by'] = $this->getOrderBy();
                 $request->query->remove('order_by');
             }
             if ($request->query->has('order_order')) {
                 $this->setOrderOrder(mb_strtoupper($request->query->get('order_order')));
+                $backupQuery['order_order'] = $this->getOrderOrder();
                 $request->query->remove('order_order');
             }
+
+            $request->attributes->set('_query', $backupQuery);
         }
     }
 
