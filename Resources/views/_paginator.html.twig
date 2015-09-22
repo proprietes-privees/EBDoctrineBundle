@@ -20,7 +20,9 @@
 
         {# Set default values #}
         {% set dem,demDisp1,demDisp2,route = 2,0,0,app.request.attributes.get('_route') %}
-        {% set parameters = app.request.query.all()|merge(app.request.attributes.get('_route_params')) %}
+        {% set parameters = app.request.query.all() %}
+        {% set parameters = parameters|merge(app.request.attributes.get('_route_params',{})) %}
+        {% set parameters = parameters|merge(app.request.attributes.get('_query',{})) %}
 
         {# Display this pager only when there is at least one item #}
         {% if max > 0 %}
