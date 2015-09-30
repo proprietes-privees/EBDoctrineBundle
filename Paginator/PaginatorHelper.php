@@ -129,12 +129,16 @@ class PaginatorHelper
      *
      * @param QueryBuilder $qb      QB
      * @param array        $filters Filters
-     * @param string       $key     QB Key
+     * @param null|string  $key     QB Key
      *
      * @return $this
      */
-    public function applyValidatedFilter(QueryBuilder $qb, array $filters = [], $key = 'a')
+    public function applyValidatedFilter(QueryBuilder $qb, array $filters = [], $key = null)
     {
+        if (null === $key) {
+            $key = $qb->getRootAliases()[0];
+        }
+
         // Not validated
         if (null !== $value = $this->getFilterArgument('not_validated', $filters)) {
             if (true === $value) {
@@ -186,13 +190,13 @@ class PaginatorHelper
     /**
      * Create a paginator
      *
-     * @param QueryBuilder $qb
+     * @param QueryBuilder $qb            Query Builder
      * @param array        $defaultOrders Default orders
-     * @param string       $key           Key
+     * @param null|string  $key           Key
      *
      * @return Paginator
      */
-    public function create(QueryBuilder $qb, $defaultOrders = [], $key = 'a')
+    public function create(QueryBuilder $qb, $defaultOrders = [], $key = null)
     {
         $paginator = new Paginator($this->decorate($qb, $defaultOrders, $key));
         $paginator->setUseOutputWalkers($this->useOutputWalker);
@@ -203,24 +207,36 @@ class PaginatorHelper
     /**
      * Decorate a query builder
      *
-     * @param QueryBuilder $qb
+     * @param QueryBuilder $qb            Query Builder
      * @param array        $defaultOrders Default orders
-     * @param string       $key           Key
+     * @param null|string  $key           Key
      *
      * @return QueryBuilder
      */
-    public function decorate(QueryBuilder $qb, $defaultOrders = [], $key = 'a')
+    public function decorate(QueryBuilder $qb, $defaultOrders = [], $key = null)
     {
+        if (null === $key) {
+            $key = $qb->getRootAliases()[0];
+        }
+
         $qb
             ->setFirstResult($this->getOffset())
             ->setMaxResults($this->getLimit());
 
-        if (null !== $this->getOrderBy()) {
-            $order = $this->getOrderOrder() ?: 'ASC';
-            $qb->addOrderBy(sprintf('%s.%s', $key, $this->getOrderBy()), $order);
+        if (null !== $this->getOrderBy() && null !== $this->getOrderOrder()) {
+            if (false !== mb_strpos($this->getOrderBy(), '.')) {
+                $qb->addOrderBy($this->getOrderBy(), $this->getOrderOrder());
+            } else {
+                $qb->addOrderBy(sprintf('%s.%s', $key, $this->getOrderBy()), $this->getOrderOrder());
+            }
         }
+
         foreach ($defaultOrders as $order => $by) {
-            $qb->addOrderBy(sprintf('%s.%s', $key, $order), $by);
+            if (false !== mb_strpos($order, '.')) {
+                $qb->addOrderBy($order, $by);
+            } else {
+                $qb->addOrderBy(sprintf('%s.%s', $key, $order), $by);
+            }
         }
 
         return $qb;
