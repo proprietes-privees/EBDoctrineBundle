@@ -259,7 +259,7 @@ class DoctrineFileEventListener
                                 '%s/%s%s%s%s.%s',
                                 $this->webPath,
                                 $this->useEnvDiscriminator ? $this->env . '/' : '',
-                                null === $class ? '' : $class . $s,
+                                null === $class ? '' : $class . '/',
                                 $tree,
                                 $entity instanceof FileVersionableInterface ? '-' . $entity->getVersion() : '',
                                 $entity->getExtension()
